@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="OfficeAnywhere.Mobile.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:OfficeAnywhere.Mobile"
+    xmlns:views="clr-namespace:OfficeAnywhere.Mobile.Views"
+    Shell.FlyoutBehavior="Disabled"
+    Shell.TabBarBackgroundColor="{StaticResource PrimaryDark}"
+    Shell.TabBarTitleColor="{StaticResource White}"
+    Shell.TabBarUnselectedColor="{StaticResource TertiaryLight}">
+
+    <ShellContent Title="Login" ContentTemplate="{DataTemplate views:Login}" Route="Login" />
+
+    <TabBar>
+        <ShellContent Title="البروفايل" ContentTemplate="{DataTemplate views:ProfilePage}" Route="ProfilePage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="FARegular" Glyph="&#xf007;" Color="{StaticResource Tertiary}" />
+            </ShellContent.Icon>
+        </ShellContent>
+
+        <ShellContent Title="المستندات" ContentTemplate="{DataTemplate views:DocumentPage}" Route="DocumentPage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="FARegular" Glyph="&#xf15c;" Color="{StaticResource Tertiary}" />
+            </ShellContent.Icon>
+        </ShellContent>
+
+        <ShellContent Title="الإجتماعات" ContentTemplate="{DataTemplate views:SchedulePage}" Route="SchedulePage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="FARegular" Glyph="&#xf004;" Color="{StaticResource Tertiary}" />
+            </ShellContent.Icon>
+        </ShellContent>
+
+        <ShellContent Title="الرئيسية" ContentTemplate="{DataTemplate views:TaskPage}" Route="TaskPage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="FARegular" Glyph="&#xf015;" Color="{StaticResource Tertiary}" />
+            </ShellContent.Icon>
+        </ShellContent>
+    </TabBar>
+</Shell>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="colorPrimary">#005F7F</color>
+	<color name="colorPrimaryDark">#005F7F</color>
+	<color name="colorAccent">#005F7F</color>
+
+	<color name="tab_bar_background">#005F7F</color>
+	<color name="tab_bar_foreground">#228092</color>
+	<color name="tab_bar_unselected">#33C0DC</color>
+</resources>

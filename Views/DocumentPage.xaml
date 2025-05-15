@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="OfficeAnywhere.Mobile.Views.DocumentPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://schemas.microsoft.com/dotnet/2021/maui/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:local="clr-namespace:OfficeAnywhere.Mobile.Views"
+    Shell.NavBarIsVisible="False"
+    mc:Ignorable="d">
+    <ContentPage.Behaviors>
+        <toolkit:StatusBarBehavior StatusBarColor="{StaticResource White}" StatusBarStyle="Default" />
+    </ContentPage.Behaviors>
+    <ContentPage.Content>
+        <VerticalStackLayout Padding="15,0,15,15">
+            <Grid ColumnDefinitions="1.5*,7*,1.5*" VerticalOptions="Start" Margin="0,0,0,20">
+                <ImageButton Grid.Column="0" Source="sample_profile_pic.jpg" HeightRequest="46" WidthRequest="46" Aspect="Fill" VerticalOptions="Center" HorizontalOptions="Start" Padding="5" BorderColor="{StaticResource PrimaryDark}" BorderWidth="5">
+                    <ImageButton.Behaviors>
+                        <toolkit:TouchBehavior PressedScale="1.12"/>
+                    </ImageButton.Behaviors>
+                </ImageButton>
+                <Image Grid.Column="1" Margin="10,0,0,0" VerticalOptions="Center" Source="logo_bg_white.png" WidthRequest="132"/>
+                <ImageButton Grid.Column="2" CornerRadius="8" BackgroundColor="{StaticResource PrimaryDark}" Padding="10" VerticalOptions="Center" HorizontalOptions="End">
+                    <ImageButton.Source>
+                        <FontImageSource FontFamily="FASolid" Glyph="&#xf0c9;" Color="{StaticResource White}" Size="22"/>
+                    </ImageButton.Source>
+                    <ImageButton.Behaviors>
+                        <toolkit:TouchBehavior PressedScale="1.12"/>
+                    </ImageButton.Behaviors>
+                </ImageButton>
+            </Grid>
+            <Label Text="المهام" FontSize="Large" TextColor="{StaticResource PrimaryDarkText}" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,20"/>
+
+            <Grid ColumnDefinitions="3*,7*" ColumnSpacing="10">
+                <Button Text="Search" CornerRadius="10" Grid.Row="0" Grid.Column="0" HeightRequest="43.5" BackgroundColor="{StaticResource PrimaryDark}">
+                    <Button.ImageSource>
+                        <FontImageSource FontFamily="FASolid" Glyph="&#xf002;" Color="{StaticResource White}" Size="22"/>
+                    </Button.ImageSource>
+                </Button>
+
+                <Frame Grid.Column="1" CornerRadius="15" BackgroundColor="{StaticResource SegmentedBackground}" Padding="2" BorderColor="Transparent">
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="0">
+                        <Button Grid.Column="0" Text="تاريخ البدء" BackgroundColor="Transparent" TextColor="{StaticResource White}" FontAttributes="Bold" CornerRadius="15" Margin="0" />
+                        <Button Grid.Column="1" Text="تاريخ الانتهاء" BackgroundColor="{StaticResource PrimaryDark}" TextColor="{StaticResource White}" FontAttributes="Bold" CornerRadius="15" Margin="0" />
+                    </Grid>
+                </Frame>
+            </Grid>
+        </VerticalStackLayout>
+    </ContentPage.Content>
+</ContentPage>
