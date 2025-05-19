@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui;
+using FFImageLoading.Maui;
 using Microsoft.Extensions.Logging;
 using OfficeAnywhere.Mobile.Services;
 using OfficeAnywhere.Mobile.ViewModels;
@@ -15,6 +16,7 @@ namespace OfficeAnywhere.Mobile
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
+                .UseFFImageLoading()
                 .UseUraniumUI()
                 .UseUraniumUIMaterial()
 
@@ -29,8 +31,14 @@ namespace OfficeAnywhere.Mobile
 
             // Register services
             builder.Services.AddSingleton<AuthService>();
+            builder.Services.AddSingleton<TaskService>();
+
             builder.Services.AddTransient<LoginViewModel>();
             builder.Services.AddTransient<Login>();
+
+            builder.Services.AddTransient<TaskViewModel>();
+            builder.Services.AddTransient<TaskPage>();
+
 
 #if DEBUG
             builder.Logging.AddDebug();

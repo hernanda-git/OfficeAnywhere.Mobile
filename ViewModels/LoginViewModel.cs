@@ -60,6 +60,9 @@ public partial class LoginViewModel : ObservableObject
             {
                 try
                 {
+                    await SecureStorage.SetAsync("UserId", userAuth.Id.ToString());
+                    await SecureStorage.SetAsync("Tenant", userAuth.Tenant);
+
                     await SecureStorage.SetAsync("AccessToken", userAuth.AccessToken);
                     await SecureStorage.SetAsync("UserName", userAuth.UserName);
                     await SecureStorage.SetAsync("Email", userAuth.Email);

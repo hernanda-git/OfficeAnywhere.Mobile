@@ -7,6 +7,7 @@
    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"  
    xmlns:local="clr-namespace:OfficeAnywhere.Mobile.Views"  
    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"  
+   xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
    Shell.NavBarIsVisible="False"  
    mc:Ignorable="d">
     <ContentPage.Behaviors>
@@ -17,11 +18,12 @@
             <ScrollView Grid.Column="0" Grid.Row="0">
                 <VerticalStackLayout Padding="15,0,15,15" Grid.Row="0" Grid.Column="0">
                     <Grid ColumnDefinitions="1.5*,7*,1.5*" VerticalOptions="Start" Margin="0,0,0,20">
-                        <ImageButton Grid.Column="0" Source="sample_profile_pic.jpg" HeightRequest="46" WidthRequest="46" Aspect="Fill" VerticalOptions="Center" HorizontalOptions="Start" Padding="5" BorderColor="{StaticResource PrimaryDark}" BorderWidth="5">
+                        <!--<ImageButton Grid.Column="0" Source="sample_profile_pic.jpg" HeightRequest="46" WidthRequest="46" Aspect="Fill" VerticalOptions="Center" HorizontalOptions="Start" Padding="5" BorderColor="{StaticResource PrimaryDark}" BorderWidth="5">
                             <ImageButton.Behaviors>
                                 <toolkit:TouchBehavior PressedScale="1.12"/>
                             </ImageButton.Behaviors>
-                        </ImageButton>
+                        </ImageButton>-->
+                        <ffimageloading:CachedImageView Grid.Column="0" Source="{Binding ProfilePicture}" Stroke="{StaticResource PrimaryDark}" StrokeThickness="5"></ffimageloading:CachedImageView>
                         <Image Grid.Column="1" Margin="10,0,0,0" VerticalOptions="Center" Source="logo_bg_white.png" WidthRequest="132"/>
                         <ImageButton Grid.Column="2" CornerRadius="8" BackgroundColor="{StaticResource PrimaryDark}" Padding="10" VerticalOptions="Center" HorizontalOptions="End">
                             <ImageButton.Source>
