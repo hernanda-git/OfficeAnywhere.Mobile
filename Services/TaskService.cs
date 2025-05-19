@@ -60,4 +60,46 @@ public class TaskService
             return res;
         }
     }
+
+    public async Task<TaskData?> FetchTaskData()
+    {
+        TaskData res = new TaskData();
+
+        string userId = await SecureStorage.GetAsync("UserId") ?? "0";
+        string tenant = await SecureStorage.GetAsync("Tenant") ?? "";
+        string accessToken = await SecureStorage.GetAsync("AccessToken") ?? "";
+
+        var clientHandler = new HttpClientHandler
+        {
+            UseCookies = false,
+        };
+        var client = new HttpClient(clientHandler);
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri($"https://o-anywhere.com/api/Global/GetFolders?=&id={userId}&folder=1&state=0&skip=0&take=10&type=0&planid=0&Project=&Customer=&keySearch="),
+            Headers =
+            {
+                { "tenant", tenant },
+                { "Authorization", $"Bearer {accessToken}" },
+            },
+        };
+        using (var response = await client.SendAsync(request))
+        {
+            response.EnsureSuccessStatusCode();
+            var body = await response.Content.ReadAsStringAsync();
+
+            var data = JsonSerializer.Deserialize<TaskData>(body, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            if (data is not null)
+            {
+                res = data;
+            }
+        }
+
+        return res; 
+    }
 }

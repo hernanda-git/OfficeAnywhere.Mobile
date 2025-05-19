@@ -65,7 +65,7 @@ namespace OfficeAnywhere.Mobile.Models;
         public int? TahseId { get; set; }
 
         [JsonPropertyName("aqdid")]
-        public int? Aqdid { get; set; }
+        public double? Aqdid { get; set; }
 
         [JsonPropertyName("EmployName")]
         public string EmployName { get; set; } = string.Empty;
@@ -236,7 +236,7 @@ namespace OfficeAnywhere.Mobile.Models;
         public int? TahseId { get; set; }
 
         [JsonPropertyName("aqdId")]
-        public int? AqdId { get; set; }
+        public double? AqdId { get; set; }
 
         [JsonPropertyName("DocName")]
         public string DocName { get; set; } = string.Empty;
