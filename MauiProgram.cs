@@ -1,5 +1,8 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using OfficeAnywhere.Mobile.Services;
+using OfficeAnywhere.Mobile.ViewModels;
+using OfficeAnywhere.Mobile.Views;
 using UraniumUI;
 
 namespace OfficeAnywhere.Mobile
@@ -24,8 +27,13 @@ namespace OfficeAnywhere.Mobile
                     fonts.AddFont("fa-solid-900.ttf", "FASolid");
                 });
 
+            // Register services
+            builder.Services.AddSingleton<AuthService>();
+            builder.Services.AddTransient<LoginViewModel>();
+            builder.Services.AddTransient<Login>();
+
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();

@@ -13,39 +13,52 @@
         <toolkit:StatusBarBehavior StatusBarColor="{StaticResource White}" StatusBarStyle="Default" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
-        <VerticalStackLayout Padding="15,0,15,15">
-            <Grid ColumnDefinitions="1.5*,7*,1.5*" VerticalOptions="Start" Margin="0,0,0,20">
-                <ImageButton Grid.Column="0" Source="sample_profile_pic.jpg" HeightRequest="46" WidthRequest="46" Aspect="Fill" VerticalOptions="Center" HorizontalOptions="Start" Padding="5" BorderColor="{StaticResource PrimaryDark}" BorderWidth="5">
-                    <ImageButton.Behaviors>
-                        <toolkit:TouchBehavior PressedScale="1.12"/>
-                    </ImageButton.Behaviors>
-                </ImageButton>
-                <Image Grid.Column="1" Margin="10,0,0,0" VerticalOptions="Center" Source="logo_bg_white.png" WidthRequest="132"/>
-                <ImageButton Grid.Column="2" CornerRadius="8" BackgroundColor="{StaticResource PrimaryDark}" Padding="10" VerticalOptions="Center" HorizontalOptions="End">
-                    <ImageButton.Source>
-                        <FontImageSource FontFamily="FASolid" Glyph="&#xf0c9;" Color="{StaticResource White}" Size="22"/>
-                    </ImageButton.Source>
-                    <ImageButton.Behaviors>
-                        <toolkit:TouchBehavior PressedScale="1.12"/>
-                    </ImageButton.Behaviors>
-                </ImageButton>
-            </Grid>
-            <Label Text="المهام" FontSize="Large" TextColor="{StaticResource PrimaryDarkText}" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,20"/>
-
-            <Grid ColumnDefinitions="3*,7*" ColumnSpacing="10">
-                <Button Text="Search" CornerRadius="10" Grid.Row="0" Grid.Column="0" HeightRequest="43.5" BackgroundColor="{StaticResource PrimaryDark}">
-                    <Button.ImageSource>
-                        <FontImageSource FontFamily="FASolid" Glyph="&#xf002;" Color="{StaticResource White}" Size="22"/>
-                    </Button.ImageSource>
-                </Button>
-
-                <Frame Grid.Column="1" CornerRadius="15" BackgroundColor="{StaticResource SegmentedBackground}" Padding="2" BorderColor="Transparent">
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="0">
-                        <Button Grid.Column="0" Text="تاريخ البدء" BackgroundColor="Transparent" TextColor="{StaticResource White}" FontAttributes="Bold" CornerRadius="15" Margin="0" />
-                        <Button Grid.Column="1" Text="تاريخ الانتهاء" BackgroundColor="{StaticResource PrimaryDark}" TextColor="{StaticResource White}" FontAttributes="Bold" CornerRadius="15" Margin="0" />
+        <Grid ColumnDefinitions="*" RowDefinitions="*">
+            <ScrollView Grid.Column="0" Grid.Row="0">
+                <VerticalStackLayout Padding="15,0,15,15" Grid.Row="0" Grid.Column="0">
+                    <Grid ColumnDefinitions="1.5*,7*,1.5*" VerticalOptions="Start" Margin="0,0,0,20">
+                        <ImageButton Grid.Column="0" Source="sample_profile_pic.jpg" HeightRequest="46" WidthRequest="46" Aspect="Fill" VerticalOptions="Center" HorizontalOptions="Start" Padding="5" BorderColor="{StaticResource PrimaryDark}" BorderWidth="5">
+                            <ImageButton.Behaviors>
+                                <toolkit:TouchBehavior PressedScale="1.12"/>
+                            </ImageButton.Behaviors>
+                        </ImageButton>
+                        <Image Grid.Column="1" Margin="10,0,0,0" VerticalOptions="Center" Source="logo_bg_white.png" WidthRequest="132"/>
+                        <ImageButton Grid.Column="2" CornerRadius="8" BackgroundColor="{StaticResource PrimaryDark}" Padding="10" VerticalOptions="Center" HorizontalOptions="End">
+                            <ImageButton.Source>
+                                <FontImageSource FontFamily="FASolid" Glyph="&#xf0c9;" Color="{StaticResource White}" Size="22"/>
+                            </ImageButton.Source>
+                            <ImageButton.Behaviors>
+                                <toolkit:TouchBehavior PressedScale="1.12"/>
+                            </ImageButton.Behaviors>
+                        </ImageButton>
                     </Grid>
-                </Frame>
-            </Grid>
-        </VerticalStackLayout>
+                    <Label Text="المهام" FontSize="Large" TextColor="{StaticResource PrimaryDarkText}" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,20"/>
+
+                    <Grid ColumnDefinitions="3*,7*" ColumnSpacing="10" Margin="0,0,0,20">
+                        <Button Text="Search" CornerRadius="10" Grid.Row="0" Grid.Column="0" HeightRequest="43.5" BackgroundColor="{StaticResource PrimaryDark}">
+                            <Button.ImageSource>
+                                <FontImageSource FontFamily="FASolid" Glyph="&#xf002;" Color="{StaticResource White}" Size="22"/>
+                            </Button.ImageSource>
+                        </Button>
+
+                        <Frame Grid.Column="1" CornerRadius="15" BackgroundColor="{StaticResource SegmentedBackground}" Padding="2" BorderColor="Transparent">
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="0">
+                                <Button Grid.Column="0" Text="تاريخ البدء" BackgroundColor="Transparent" TextColor="{StaticResource White}" FontAttributes="Bold" CornerRadius="15" Margin="0" />
+                                <Button Grid.Column="1" Text="تاريخ الانتهاء" BackgroundColor="{StaticResource PrimaryDark}" TextColor="{StaticResource White}" FontAttributes="Bold" CornerRadius="15" Margin="0" />
+                            </Grid>
+                        </Frame>
+                    </Grid>
+
+                </VerticalStackLayout>
+            </ScrollView>
+            <ImageButton Grid.Column="0" Grid.Row="0" Padding="10" WidthRequest="50" Margin="20" VerticalOptions="End" HorizontalOptions="End" CornerRadius="15" BackgroundColor="{StaticResource PrimaryDark}">
+                <ImageButton.Source>
+                    <FontImageSource FontFamily="FASolid" Glyph="&#x2b;" Color="{StaticResource White}"/>
+                </ImageButton.Source>
+                <ImageButton.Behaviors>
+                    <toolkit:TouchBehavior PressedScale="1.05"/>
+                </ImageButton.Behaviors>
+            </ImageButton>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

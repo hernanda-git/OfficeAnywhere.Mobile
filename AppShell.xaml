@@ -25,11 +25,11 @@
             </ShellContent.Icon>
         </ShellContent>
 
-        <ShellContent Title="الإجتماعات" ContentTemplate="{DataTemplate views:SchedulePage}" Route="SchedulePage">
+        <!--<ShellContent Title="الإجتماعات" ContentTemplate="{DataTemplate views:SchedulePage}" Route="SchedulePage">
             <ShellContent.Icon>
                 <FontImageSource FontFamily="FARegular" Glyph="&#xf004;" Color="{StaticResource Tertiary}" />
             </ShellContent.Icon>
-        </ShellContent>
+        </ShellContent>-->
 
         <ShellContent Title="الرئيسية" ContentTemplate="{DataTemplate views:TaskPage}" Route="TaskPage">
             <ShellContent.Icon>

@@ -30,22 +30,71 @@
                     </ImageButton.Behaviors>
                 </ImageButton>
             </Grid>
-            <Label Text="المهام" FontSize="Large" TextColor="{StaticResource PrimaryDarkText}" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,20"/>
+            <Label Text="المستندات" FontSize="Large" TextColor="{StaticResource PrimaryDarkText}" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,20"/>
 
-            <Grid ColumnDefinitions="3*,7*" ColumnSpacing="10">
+            <Grid ColumnDefinitions="3*,7*" ColumnSpacing="10" Margin="0,0,0,20">
                 <Button Text="Search" CornerRadius="10" Grid.Row="0" Grid.Column="0" HeightRequest="43.5" BackgroundColor="{StaticResource PrimaryDark}">
                     <Button.ImageSource>
                         <FontImageSource FontFamily="FASolid" Glyph="&#xf002;" Color="{StaticResource White}" Size="22"/>
                     </Button.ImageSource>
                 </Button>
-
-                <Frame Grid.Column="1" CornerRadius="15" BackgroundColor="{StaticResource SegmentedBackground}" Padding="2" BorderColor="Transparent">
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="0">
-                        <Button Grid.Column="0" Text="تاريخ البدء" BackgroundColor="Transparent" TextColor="{StaticResource White}" FontAttributes="Bold" CornerRadius="15" Margin="0" />
-                        <Button Grid.Column="1" Text="تاريخ الانتهاء" BackgroundColor="{StaticResource PrimaryDark}" TextColor="{StaticResource White}" FontAttributes="Bold" CornerRadius="15" Margin="0" />
-                    </Grid>
-                </Frame>
             </Grid>
+
+            <Frame BackgroundColor="Transparent" BorderColor="{StaticResource PrimaryDark}" CornerRadius="5" Padding="10" Margin="0,0,0,15" HeightRequest="50" VerticalOptions="Start" HasShadow="False">
+                <Label Text="حكومي" TextColor="{StaticResource PrimaryDarkText}" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Frame.Behaviors>
+                    <toolkit:TouchBehavior PressedScale="1.02"/>
+                </Frame.Behaviors>
+            </Frame>
+
+            <Frame BackgroundColor="Transparent" BorderColor="{StaticResource PrimaryDark}" CornerRadius="5" Padding="10" Margin="0,0,0,15" HeightRequest="50" VerticalOptions="Start" HasShadow="False">
+                <Label Text="موارد بشرية" TextColor="{StaticResource PrimaryDarkText}" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Frame.Behaviors>
+                    <toolkit:TouchBehavior PressedScale="1.02"/>
+                </Frame.Behaviors>
+            </Frame>
+
+            <Frame BackgroundColor="Transparent" BorderColor="{StaticResource PrimaryDark}" CornerRadius="5" Padding="10" Margin="0,0,0,15" HeightRequest="50" VerticalOptions="Start" HasShadow="False">
+                <Label Text="عقود" TextColor="{StaticResource PrimaryDarkText}" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Frame.Behaviors>
+                    <toolkit:TouchBehavior PressedScale="1.02"/>
+                </Frame.Behaviors>
+            </Frame>
+
+            <Frame BackgroundColor="Transparent" BorderColor="{StaticResource PrimaryDark}" CornerRadius="5" Padding="10" Margin="0,0,0,15" HeightRequest="50" VerticalOptions="Start" HasShadow="False">
+                <Label Text="مالية" TextColor="{StaticResource PrimaryDarkText}" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Frame.Behaviors>
+                    <toolkit:TouchBehavior PressedScale="1.02"/>
+                </Frame.Behaviors>
+            </Frame>
+
+            <Frame BackgroundColor="Transparent" BorderColor="{StaticResource PrimaryDark}" CornerRadius="5" Padding="10" Margin="0,0,0,15" HeightRequest="50" VerticalOptions="Start" HasShadow="False">
+                <Label Text="جوده" TextColor="{StaticResource PrimaryDarkText}" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Frame.Behaviors>
+                    <toolkit:TouchBehavior PressedScale="1.02"/>
+                </Frame.Behaviors>
+            </Frame>
+
+            <Frame BackgroundColor="Transparent" BorderColor="{StaticResource PrimaryDark}" CornerRadius="5" Padding="10" Margin="0,0,0,15" HeightRequest="50" VerticalOptions="Start" HasShadow="False">
+                <Label Text="مباني" TextColor="{StaticResource PrimaryDarkText}" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Frame.Behaviors>
+                    <toolkit:TouchBehavior PressedScale="1.02"/>
+                </Frame.Behaviors>
+            </Frame>
+
+            <Frame BackgroundColor="Transparent" BorderColor="{StaticResource PrimaryDark}" CornerRadius="5" Padding="10" Margin="0,0,0,15" HeightRequest="50" VerticalOptions="Start" HasShadow="False">
+                <Label Text="تصميم" TextColor="{StaticResource PrimaryDarkText}" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Frame.Behaviors>
+                    <toolkit:TouchBehavior PressedScale="1.02"/>
+                </Frame.Behaviors>
+            </Frame>
+
+            <Frame BackgroundColor="Transparent" BorderColor="{StaticResource PrimaryDark}" CornerRadius="5" Padding="10" Margin="0,0,0,15" HeightRequest="50" VerticalOptions="Start" HasShadow="False">
+                <Label Text="المحتوى" TextColor="{StaticResource PrimaryDarkText}" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Frame.Behaviors>
+                    <toolkit:TouchBehavior PressedScale="1.02"/>
+                </Frame.Behaviors>
+            </Frame>
         </VerticalStackLayout>
     </ContentPage.Content>
 </ContentPage>
