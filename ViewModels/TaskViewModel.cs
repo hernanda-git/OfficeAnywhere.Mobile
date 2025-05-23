@@ -4,13 +4,17 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OfficeAnywhere.Mobile.Models;
 using OfficeAnywhere.Mobile.Services;
+using OfficeAnywhere.Mobile.Views;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace OfficeAnywhere.Mobile.ViewModels;
 
 public partial class TaskViewModel : ObservableObject
 {
     private readonly TaskService _taskService;
+
+    public ICommand AddTaskCommand { get; }
 
     [ObservableProperty]
     private bool isBusy;
@@ -19,11 +23,12 @@ public partial class TaskViewModel : ObservableObject
     private string? profilePicture;
 
     [ObservableProperty]
-    private ObservableCollection<TaskData> taskDataList = new();
+    private ObservableCollection<TaskCard> taskCardList = new();
 
     public TaskViewModel(TaskService taskService)
     {
         _taskService = taskService;
+        AddTaskCommand = new Command(async () => await AddTask());
         InitializeAsync();
     }
 
@@ -74,10 +79,27 @@ public partial class TaskViewModel : ObservableObject
         {
             IsBusy = true;
             var taskData = await _taskService.FetchTaskData();
-            if (taskData != null)
+            if (taskData?.DelmonTasks != null)
             {
-                TaskDataList.Clear();
-                TaskDataList.Add(taskData);
+                // Map DelmonTask to TaskCard
+                var taskCards = taskData.DelmonTasks.Select(task => new TaskCard
+                {
+                    Title = task.Title,
+                    TaskTypeName = task.TaskTypeName,
+                    AddedDate = task.AddedDate,
+                    LastUpdatedDate = task.LastUpdatedDate,
+                    SenderUserImage = task.SenderUserImage,
+                    EmployUserImage = task.EmployUserImage,
+                    NotSameImage = task.SenderUserImage != task.EmployUserImage,
+                    MessageCount = task.MessageCount
+                }).ToList();
+
+                // Update ObservableCollection
+                TaskCardList.Clear();
+                foreach (var taskCard in taskCards)
+                {
+                    TaskCardList.Add(taskCard);
+                }
             }
         }
         catch (Exception ex)
@@ -99,5 +121,10 @@ public partial class TaskViewModel : ObservableObject
         {
             IsBusy = false;
         }
+    }
+
+    private async Task AddTask()
+    {
+        await Shell.Current.GoToAsync($"//FormTemplate", true);
     }
 }

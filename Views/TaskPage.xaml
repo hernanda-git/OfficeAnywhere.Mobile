@@ -8,11 +8,15 @@
    xmlns:local="clr-namespace:OfficeAnywhere.Mobile.Views"  
    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"  
    xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+   xmlns:converters="clr-namespace:OfficeAnywhere.Mobile.Converters"
    Shell.NavBarIsVisible="False"  
    mc:Ignorable="d">
     <ContentPage.Behaviors>
         <toolkit:StatusBarBehavior StatusBarColor="{StaticResource White}" StatusBarStyle="Default" />
     </ContentPage.Behaviors>
+    <ContentPage.Resources>
+        <converters:ImageUrlConverter x:Key="ImageUrlConverter" />
+    </ContentPage.Resources>
     <ContentPage.Content>
         <Grid ColumnDefinitions="*" RowDefinitions="*">
             <ScrollView Grid.Column="0" Grid.Row="0">
@@ -51,279 +55,107 @@
                         </Frame>
                     </Grid>
 
-                    <Frame BorderColor="Transparent" HasShadow="False" BackgroundColor="{StaticResource TaskBackground}" Margin="0,0,0,20">
-                        <Grid RowDefinitions="*,*,*">
-                            <Grid Grid.Row="0" ColumnDefinitions="*,*">
-                                <Label Text="December 12" Grid.Column="0" FontSize="16" TextColor="{StaticResource PrimaryDark}" VerticalOptions="Center"/>
-                                <Label Text="اجتماع التصميم" Grid.Column="1" HorizontalTextAlignment="End" FontSize="22" FontAttributes="Bold" TextColor="{StaticResource PrimaryDark}" VerticalOptions="Center"/>
-                            </Grid>
-                            <Grid Grid.Row="1" ColumnDefinitions="*,*">
-                                <Label Text="9:00" Grid.Column="0" TextColor="{StaticResource PrimaryDark}" FontSize="16" VerticalOptions="Center"/>
-                                <Label Text="الحضور للجميع" Grid.Column="1" HorizontalTextAlignment="End" FontSize="22" TextColor="{StaticResource PrimaryDark}" VerticalOptions="Center"/>
-                            </Grid>
-                            <Grid Grid.Row="2" ColumnDefinitions="*,*" Margin="0,20,0,0">
-                                <HorizontalStackLayout Grid.Column="0" HorizontalOptions="Start">
-                                    <Frame CornerRadius="100" BorderColor="{StaticResource PrimaryDark}" BackgroundColor="{StaticResource PrimaryDark}" 
-                                       HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="45" HeightRequest="45" Padding="5" Margin="0,0,-15,0"
-                                       HasShadow="False">
-                                        <Image Source="dummy_pp_1.jpg" Aspect="AspectFill" HeightRequest="40" WidthRequest="40">
-                                            <Image.Clip>
-                                                <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20"/>
-                                            </Image.Clip>
-                                        </Image>
-                                    </Frame>
-
-                                    <Frame CornerRadius="100" BorderColor="{StaticResource PrimaryDark}" BackgroundColor="{StaticResource PrimaryDark}" 
-                                       HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="45" HeightRequest="45" Padding="5" Margin="0,0,-15,0"
-                                       HasShadow="False">
-                                        <Image Source="dummy_pp_2.jpg" Aspect="AspectFill" HeightRequest="40" WidthRequest="40">
-                                            <Image.Clip>
-                                                <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20"/>
-                                            </Image.Clip>
-                                        </Image>
-                                    </Frame>
-
-                                    <Frame CornerRadius="100" BorderColor="{StaticResource PrimaryDark}" BackgroundColor="{StaticResource PrimaryDark}" 
-                                      HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="45" HeightRequest="45" Padding="5" Margin="0,0,-15,0"
-                                      HasShadow="False">
-                                        <Image Source="dummy_pp_3.jpg" Aspect="AspectFill" HeightRequest="40" WidthRequest="40">
-                                            <Image.Clip>
-                                                <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20"/>
-                                            </Image.Clip>
-                                        </Image>
-                                    </Frame>
-
-                                    <!-- +X Avatar Overflow -->
-                                    <Frame WidthRequest="45" HeightRequest="45" CornerRadius="100" Padding="2" BackgroundColor="{StaticResource PrimaryDark}" HasShadow="False">
-                                        <Grid>
-                                            <Label Text="+2" FontAttributes="Bold" TextColor="White" FontSize="14" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <CollectionView ItemsSource="{Binding TaskCardList}"
+                Margin="10"
+                SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame BorderColor="Transparent" 
+                   HasShadow="False" 
+                   BackgroundColor="{StaticResource TaskBackground}" 
+                   Margin="0,0,0,20">
+                                    <Grid RowDefinitions="*,*,*">
+                                        <Grid Grid.Row="0" ColumnDefinitions="*,*">
+                                            <Label Text="{Binding LastUpdatedDate, StringFormat='{0:MMMM dd}'}" 
+                               Grid.Column="0" 
+                               FontSize="16" 
+                               TextColor="{StaticResource PrimaryDark}" 
+                               VerticalOptions="Center"/>
+                                            <Label Text="{Binding Title}" 
+                               Grid.Column="1" 
+                               HorizontalTextAlignment="End" 
+                               FontSize="22" 
+                               FontAttributes="Bold" 
+                               TextColor="{StaticResource PrimaryDark}" 
+                               VerticalOptions="Center"/>
                                         </Grid>
-                                    </Frame>
-                                </HorizontalStackLayout>
-                                <HorizontalStackLayout Grid.Column="1" HorizontalOptions="End">
-                                    <Frame BackgroundColor="White" Padding="7" Margin="0,0,10,0" BorderColor="Transparent" HasShadow="False" CornerRadius="10" VerticalOptions="Center">
-                                        <Label FontFamily="FARegular" Text="&#xf005;" TextColor="{StaticResource PrimaryDark}" FontSize="22"/>
-                                    </Frame>
-                                    <Label Text="65829" TextColor="{StaticResource PrimaryDarkText}" FontSize="16" VerticalOptions="Center"/>
-                                </HorizontalStackLayout>
-                            </Grid>
-                        </Grid>
-                    </Frame>
-
-                    <Frame BorderColor="Transparent" HasShadow="False" BackgroundColor="{StaticResource TaskBackground}" Margin="0,0,0,20">
-                        <Grid RowDefinitions="*,*,*">
-                            <Grid Grid.Row="0" ColumnDefinitions="*,*">
-                                <Label Text="December 12" Grid.Column="0" FontSize="16" TextColor="{StaticResource PrimaryDark}" VerticalOptions="Center"/>
-                                <Label Text="اجتماع التصميم" Grid.Column="1" HorizontalTextAlignment="End" FontSize="22" FontAttributes="Bold" TextColor="{StaticResource PrimaryDark}" VerticalOptions="Center"/>
-                            </Grid>
-                            <Grid Grid.Row="1" ColumnDefinitions="*,*">
-                                <Label Text="9:00" Grid.Column="0" TextColor="{StaticResource PrimaryDark}" FontSize="16" VerticalOptions="Center"/>
-                                <Label Text="الحضور للجميع" Grid.Column="1" HorizontalTextAlignment="End" FontSize="22" TextColor="{StaticResource PrimaryDark}" VerticalOptions="Center"/>
-                            </Grid>
-                            <Grid Grid.Row="2" ColumnDefinitions="*,*" Margin="0,20,0,0">
-                                <HorizontalStackLayout Grid.Column="0">
-                                    <Frame CornerRadius="100" BorderColor="{StaticResource PrimaryDark}" BackgroundColor="{StaticResource PrimaryDark}" 
-                       HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="45" HeightRequest="45" Padding="5" Margin="0,0,-15,0"
-                       HasShadow="False">
-                                        <Image Source="dummy_pp_2.jpg" Aspect="AspectFill" HeightRequest="40" WidthRequest="40">
-                                            <Image.Clip>
-                                                <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20"/>
-                                            </Image.Clip>
-                                        </Image>
-                                    </Frame>
-
-                                    <Frame CornerRadius="100" BorderColor="{StaticResource PrimaryDark}" BackgroundColor="{StaticResource PrimaryDark}" 
-                       HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="45" HeightRequest="45" Padding="5" Margin="0,0,-15,0"
-                       HasShadow="False">
-                                        <Image Source="dummy_pp_1.jpg" Aspect="AspectFill" HeightRequest="40" WidthRequest="40">
-                                            <Image.Clip>
-                                                <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20"/>
-                                            </Image.Clip>
-                                        </Image>
-                                    </Frame>
-                                </HorizontalStackLayout>
-                                <HorizontalStackLayout Grid.Column="1" HorizontalOptions="End">
-                                    <Frame BackgroundColor="White" Padding="7" Margin="0,0,10,0" BorderColor="Transparent" HasShadow="False" CornerRadius="10" VerticalOptions="Center">
-                                        <Label FontFamily="FARegular" Text="&#xf005;" TextColor="{StaticResource PrimaryDark}" FontSize="22"/>
-                                    </Frame>
-                                    <Label Text="65829" TextColor="{StaticResource PrimaryDarkText}" FontSize="16" VerticalOptions="Center"/>
-                                </HorizontalStackLayout>
-                            </Grid>
-                        </Grid>
-                    </Frame>
-
-                    <Frame BorderColor="Transparent" HasShadow="False" BackgroundColor="{StaticResource TaskBackground}" Margin="0,0,0,20">
-                        <Grid RowDefinitions="*,*,*">
-                            <Grid Grid.Row="0" ColumnDefinitions="*,*">
-                                <Label Text="December 12" Grid.Column="0" FontSize="16" TextColor="{StaticResource PrimaryDark}" VerticalOptions="Center"/>
-                                <Label Text="اجتماع التصميم" Grid.Column="1" HorizontalTextAlignment="End" FontSize="22" FontAttributes="Bold" TextColor="{StaticResource PrimaryDark}" VerticalOptions="Center"/>
-                            </Grid>
-                            <Grid Grid.Row="1" ColumnDefinitions="*,*">
-                                <Label Text="9:00" Grid.Column="0" TextColor="{StaticResource PrimaryDark}" FontSize="16" VerticalOptions="Center"/>
-                                <Label Text="الحضور للجميع" Grid.Column="1" HorizontalTextAlignment="End" FontSize="22" TextColor="{StaticResource PrimaryDark}" VerticalOptions="Center"/>
-                            </Grid>
-                            <Grid Grid.Row="2" ColumnDefinitions="*,*" Margin="0,20,0,0">
-                                <HorizontalStackLayout Grid.Column="0">
-                                    <Frame CornerRadius="100" BorderColor="{StaticResource PrimaryDark}" BackgroundColor="{StaticResource PrimaryDark}" 
-       HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="45" HeightRequest="45" Padding="5" Margin="0,0,-15,0"
-       HasShadow="False">
-                                        <Image Source="dummy_pp_3.jpg" Aspect="AspectFill" HeightRequest="40" WidthRequest="40">
-                                            <Image.Clip>
-                                                <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20"/>
-                                            </Image.Clip>
-                                        </Image>
-                                    </Frame>
-
-                                    <Frame CornerRadius="100" BorderColor="{StaticResource PrimaryDark}" BackgroundColor="{StaticResource PrimaryDark}" 
-       HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="45" HeightRequest="45" Padding="5" Margin="0,0,-15,0"
-       HasShadow="False">
-                                        <Image Source="dummy_pp_1.jpg" Aspect="AspectFill" HeightRequest="40" WidthRequest="40">
-                                            <Image.Clip>
-                                                <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20"/>
-                                            </Image.Clip>
-                                        </Image>
-                                    </Frame>
-
-                                    <Frame CornerRadius="100" BorderColor="{StaticResource PrimaryDark}" BackgroundColor="{StaticResource PrimaryDark}" 
-HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="45" HeightRequest="45" Padding="5" Margin="0,0,-15,0"
-HasShadow="False">
-                                        <Image Source="dummy_pp_2.jpg" Aspect="AspectFill" HeightRequest="40" WidthRequest="40">
-                                            <Image.Clip>
-                                                <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20"/>
-                                            </Image.Clip>
-                                        </Image>
-                                    </Frame>
-                                </HorizontalStackLayout>
-                                <HorizontalStackLayout Grid.Column="1" HorizontalOptions="End">
-                                    <Frame BackgroundColor="White" Padding="7" Margin="0,0,10,0" BorderColor="Transparent" HasShadow="False" CornerRadius="10" VerticalOptions="Center">
-                                        <Label FontFamily="FARegular" Text="&#xf005;" TextColor="{StaticResource PrimaryDark}" FontSize="22"/>
-                                    </Frame>
-                                    <Label Text="65829" TextColor="{StaticResource PrimaryDarkText}" FontSize="16" VerticalOptions="Center"/>
-                                </HorizontalStackLayout>
-                            </Grid>
-                        </Grid>
-                    </Frame>
-
-                    <Frame BorderColor="Transparent" HasShadow="False" BackgroundColor="{StaticResource TaskBackground}" Margin="0,0,0,20">
-                        <Grid RowDefinitions="*,*,*">
-                            <Grid Grid.Row="0" ColumnDefinitions="*,*">
-                                <Label Text="December 12" Grid.Column="0" FontSize="16" TextColor="{StaticResource PrimaryDark}" VerticalOptions="Center"/>
-                                <Label Text="اجتماع التصميم" Grid.Column="1" HorizontalTextAlignment="End" FontSize="22" FontAttributes="Bold" TextColor="{StaticResource PrimaryDark}" VerticalOptions="Center"/>
-                            </Grid>
-                            <Grid Grid.Row="1" ColumnDefinitions="*,*">
-                                <Label Text="9:00" Grid.Column="0" TextColor="{StaticResource PrimaryDark}" FontSize="16" VerticalOptions="Center"/>
-                                <Label Text="الحضور للجميع" Grid.Column="1" HorizontalTextAlignment="End" FontSize="22" TextColor="{StaticResource PrimaryDark}" VerticalOptions="Center"/>
-                            </Grid>
-                            <Grid Grid.Row="2" ColumnDefinitions="*,*" Margin="0,20,0,0">
-                                <HorizontalStackLayout Grid.Column="0" HorizontalOptions="Start">
-                                    <Frame CornerRadius="100" BorderColor="{StaticResource PrimaryDark}" BackgroundColor="{StaticResource PrimaryDark}" 
-                       HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="45" HeightRequest="45" Padding="5" Margin="0,0,-15,0"
-                       HasShadow="False">
-                                        <Image Source="dummy_pp_1.jpg" Aspect="AspectFill" HeightRequest="40" WidthRequest="40">
-                                            <Image.Clip>
-                                                <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20"/>
-                                            </Image.Clip>
-                                        </Image>
-                                    </Frame>
-
-                                    <Frame CornerRadius="100" BorderColor="{StaticResource PrimaryDark}" BackgroundColor="{StaticResource PrimaryDark}" 
-                       HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="45" HeightRequest="45" Padding="5" Margin="0,0,-15,0"
-                       HasShadow="False">
-                                        <Image Source="dummy_pp_2.jpg" Aspect="AspectFill" HeightRequest="40" WidthRequest="40">
-                                            <Image.Clip>
-                                                <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20"/>
-                                            </Image.Clip>
-                                        </Image>
-                                    </Frame>
-
-                                    <Frame CornerRadius="100" BorderColor="{StaticResource PrimaryDark}" BackgroundColor="{StaticResource PrimaryDark}" 
-                      HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="45" HeightRequest="45" Padding="5" Margin="0,0,-15,0"
-                      HasShadow="False">
-                                        <Image Source="dummy_pp_3.jpg" Aspect="AspectFill" HeightRequest="40" WidthRequest="40">
-                                            <Image.Clip>
-                                                <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20"/>
-                                            </Image.Clip>
-                                        </Image>
-                                    </Frame>
-
-                                    <!-- +X Avatar Overflow -->
-                                    <Frame WidthRequest="45" HeightRequest="45" CornerRadius="100" Padding="2" BackgroundColor="{StaticResource PrimaryDark}" HasShadow="False">
-                                        <Grid>
-                                            <Label Text="+5" FontAttributes="Bold" TextColor="White" FontSize="14" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                        <Grid Grid.Row="1" ColumnDefinitions="*,*">
+                                            <Label Text="{Binding LastUpdatedDate, StringFormat='{0:HH:mm}'}" 
+                               Grid.Column="0" 
+                               TextColor="{StaticResource PrimaryDark}" 
+                               FontSize="16" 
+                               VerticalOptions="Center"/>
+                                            <Label Text="{Binding TaskTypeName}" 
+                               Grid.Column="1" 
+                               HorizontalTextAlignment="End" 
+                               FontSize="22" 
+                               TextColor="{StaticResource PrimaryDark}" 
+                               VerticalOptions="Center"/>
                                         </Grid>
-                                    </Frame>
-                                </HorizontalStackLayout>
-                                <HorizontalStackLayout Grid.Column="1" HorizontalOptions="End">
-                                    <Frame BackgroundColor="White" Padding="7" Margin="0,0,10,0" BorderColor="Transparent" HasShadow="False" CornerRadius="10" VerticalOptions="Center">
-                                        <Label FontFamily="FARegular" Text="&#xf005;" TextColor="{StaticResource PrimaryDark}" FontSize="22"/>
-                                    </Frame>
-                                    <Label Text="65829" TextColor="{StaticResource PrimaryDarkText}" FontSize="16" VerticalOptions="Center"/>
-                                </HorizontalStackLayout>
-                            </Grid>
-                        </Grid>
-                    </Frame>
-
-                    <Frame BorderColor="Transparent" HasShadow="False" BackgroundColor="{StaticResource TaskBackground}" Margin="0,0,0,20">
-                        <Grid RowDefinitions="*,*,*">
-                            <Grid Grid.Row="0" ColumnDefinitions="*,*">
-                                <Label Text="December 12" Grid.Column="0" FontSize="16" TextColor="{StaticResource PrimaryDark}" VerticalOptions="Center"/>
-                                <Label Text="اجتماع التصميم" Grid.Column="1" HorizontalTextAlignment="End" FontSize="22" FontAttributes="Bold" TextColor="{StaticResource PrimaryDark}" VerticalOptions="Center"/>
-                            </Grid>
-                            <Grid Grid.Row="1" ColumnDefinitions="*,*">
-                                <Label Text="9:00" Grid.Column="0" TextColor="{StaticResource PrimaryDark}" FontSize="16" VerticalOptions="Center"/>
-                                <Label Text="الحضور للجميع" Grid.Column="1" HorizontalTextAlignment="End" FontSize="22" TextColor="{StaticResource PrimaryDark}" VerticalOptions="Center"/>
-                            </Grid>
-                            <Grid Grid.Row="2" ColumnDefinitions="*,*" Margin="0,20,0,0">
-                                <HorizontalStackLayout Grid.Column="0" HorizontalOptions="Start">
-                                    <Frame CornerRadius="100" BorderColor="{StaticResource PrimaryDark}" BackgroundColor="{StaticResource PrimaryDark}" 
-                       HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="45" HeightRequest="45" Padding="5" Margin="0,0,-15,0"
-                       HasShadow="False">
-                                        <Image Source="dummy_pp_1.jpg" Aspect="AspectFill" HeightRequest="40" WidthRequest="40">
-                                            <Image.Clip>
-                                                <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20"/>
-                                            </Image.Clip>
-                                        </Image>
-                                    </Frame>
-
-                                    <Frame CornerRadius="100" BorderColor="{StaticResource PrimaryDark}" BackgroundColor="{StaticResource PrimaryDark}" 
-                       HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="45" HeightRequest="45" Padding="5" Margin="0,0,-15,0"
-                       HasShadow="False">
-                                        <Image Source="dummy_pp_2.jpg" Aspect="AspectFill" HeightRequest="40" WidthRequest="40">
-                                            <Image.Clip>
-                                                <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20"/>
-                                            </Image.Clip>
-                                        </Image>
-                                    </Frame>
-
-                                    <Frame CornerRadius="100" BorderColor="{StaticResource PrimaryDark}" BackgroundColor="{StaticResource PrimaryDark}" 
-                      HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="45" HeightRequest="45" Padding="5" Margin="0,0,-15,0"
-                      HasShadow="False">
-                                        <Image Source="dummy_pp_3.jpg" Aspect="AspectFill" HeightRequest="40" WidthRequest="40">
-                                            <Image.Clip>
-                                                <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20"/>
-                                            </Image.Clip>
-                                        </Image>
-                                    </Frame>
-
-                                    <!-- +X Avatar Overflow -->
-                                    <Frame WidthRequest="45" HeightRequest="45" CornerRadius="100" Padding="2" BackgroundColor="{StaticResource PrimaryDark}" HasShadow="False">
-                                        <Grid>
-                                            <Label Text="+1" FontAttributes="Bold" TextColor="White" FontSize="14" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                        <Grid Grid.Row="2" ColumnDefinitions="*,*" Margin="0,20,0,0">
+                                            <HorizontalStackLayout Grid.Column="0" HorizontalOptions="Start">
+                                                <Frame CornerRadius="100" 
+                                   BorderColor="{StaticResource PrimaryDark}" 
+                                   BackgroundColor="{StaticResource PrimaryDark}" 
+                                   HorizontalOptions="Start" 
+                                   VerticalOptions="Start" 
+                                   WidthRequest="45" 
+                                   HeightRequest="45" 
+                                   Padding="5" 
+                                   Margin="0,0,-15,0"
+                                   HasShadow="False">
+                                                    <ffimageloading:CachedImage Source="{Binding SenderUserImage, Converter={StaticResource ImageUrlConverter}}"
+                                       Aspect="AspectFill" 
+                                       HeightRequest="40" 
+                                       WidthRequest="40">
+                                                        <ffimageloading:CachedImage.Clip>
+                                                            <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20"/>
+                                                        </ffimageloading:CachedImage.Clip>
+                                                    </ffimageloading:CachedImage>
+                                                </Frame>
+                                                <Frame CornerRadius="100" 
+                                                       IsVisible="{Binding NotSameImage}"
+                                             BorderColor="{StaticResource PrimaryDark}" 
+                                               BackgroundColor="{StaticResource PrimaryDark}" 
+                                               HorizontalOptions="Start" 
+                                               VerticalOptions="Start" 
+                                               WidthRequest="45" 
+                                               HeightRequest="45" 
+                                               Padding="5" 
+                                               Margin="0,0,-15,0"
+                                               HasShadow="False">
+                                                    <ffimageloading:CachedImage  Source="{Binding EmployUserImage, Converter={StaticResource ImageUrlConverter}}"
+                                       Aspect="AspectFill" 
+                                       HeightRequest="40" 
+                                       WidthRequest="40">
+                                                        <ffimageloading:CachedImage.Clip>
+                                                            <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20"/>
+                                                        </ffimageloading:CachedImage.Clip>
+                                                    </ffimageloading:CachedImage>
+                                                </Frame>
+                                            </HorizontalStackLayout>
+                                            <HorizontalStackLayout Grid.Column="1" HorizontalOptions="End">
+                                                <Frame BackgroundColor="White" Padding="7" Margin="0,0,10,0" BorderColor="Transparent" HasShadow="False" CornerRadius="10" VerticalOptions="Center">
+                                                    <Label FontFamily="FARegular" 
+                                       Text="" 
+                                       TextColor="{StaticResource PrimaryDark}" 
+                                       FontSize="22"/>
+                                                </Frame>
+                                                <Label Text="{Binding MessageCount}" 
+                                   TextColor="{StaticResource PrimaryDarkText}" 
+                                   FontSize="16" 
+                                   VerticalOptions="Center"/>
+                                            </HorizontalStackLayout>
                                         </Grid>
-                                    </Frame>
-                                </HorizontalStackLayout>
-                                <HorizontalStackLayout Grid.Column="1" HorizontalOptions="End">
-                                    <Frame BackgroundColor="White" Padding="7" Margin="0,0,10,0" BorderColor="Transparent" HasShadow="False" CornerRadius="10" VerticalOptions="Center">
-                                        <Label FontFamily="FARegular" Text="&#xf005;" TextColor="{StaticResource PrimaryDark}" FontSize="22"/>
-                                    </Frame>
-                                    <Label Text="65829" TextColor="{StaticResource PrimaryDarkText}" FontSize="16" VerticalOptions="Center"/>
-                                </HorizontalStackLayout>
-                            </Grid>
-                        </Grid>
-                    </Frame>
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
                 </VerticalStackLayout>
             </ScrollView>
-            <ImageButton Grid.Column="0" Grid.Row="0" Padding="10" WidthRequest="50" Margin="20" VerticalOptions="End" HorizontalOptions="End" CornerRadius="15" BackgroundColor="{StaticResource PrimaryDark}">
+            <ImageButton Command="{Binding AddTaskCommand}" Grid.Column="0" Grid.Row="0" Padding="10" WidthRequest="50" Margin="20" VerticalOptions="End" HorizontalOptions="End" CornerRadius="15" BackgroundColor="{StaticResource PrimaryDark}">
                 <ImageButton.Source>
                     <FontImageSource FontFamily="FASolid" Glyph="&#x2b;" Color="{StaticResource White}"/>
                 </ImageButton.Source>

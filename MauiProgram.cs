@@ -32,12 +32,20 @@ namespace OfficeAnywhere.Mobile
             // Register services
             builder.Services.AddSingleton<AuthService>();
             builder.Services.AddSingleton<TaskService>();
+            builder.Services.AddSingleton<FormTemplateService>();
 
             builder.Services.AddTransient<LoginViewModel>();
             builder.Services.AddTransient<Login>();
 
             builder.Services.AddTransient<TaskViewModel>();
             builder.Services.AddTransient<TaskPage>();
+
+            builder.Services.AddTransient<FormTemplateViewModel>();
+            builder.Services.AddTransient<FormTemplate>();
+
+            builder.Services.AddTransient<ExperimentViewModel>();
+            builder.Services.AddTransient<ExperimentPage>();
+
 
 
 #if DEBUG

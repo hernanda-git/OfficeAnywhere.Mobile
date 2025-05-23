@@ -3,11 +3,11 @@
     x:Class="OfficeAnywhere.Mobile.Views.Login"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:d="http://schemas.microsoft.com/dotnet/2021/maui/design"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
-    xmlns:local="clr-namespace:OfficeAnywhere.Mobile.Views"
     xmlns:converters="clr-namespace:OfficeAnywhere.Mobile.Converters"
+    xmlns:d="http://schemas.microsoft.com/dotnet/2021/maui/design"
+    xmlns:local="clr-namespace:OfficeAnywhere.Mobile.Views"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     BackgroundColor="#005F7F"
     Shell.NavBarIsVisible="False"
     mc:Ignorable="d">
@@ -15,19 +15,58 @@
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     </ContentPage.Resources>
     <ContentPage.Content>
-        <Grid RowDefinitions="*,Auto" Padding="20">
-            <Image Grid.Row="0" VerticalOptions="Center" Source="logo_light.png" HeightRequest="100" />
+        <Grid Padding="20" RowDefinitions="*,Auto">
+            <Image
+                Grid.Row="0"
+                HeightRequest="100"
+                Source="logo_light.png"
+                VerticalOptions="Center" />
 
-            <Frame Grid.Row="1" Margin="10" Padding="20" CornerRadius="15" BackgroundColor="White" HasShadow="False" BorderColor="Transparent">
-                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*">
-                    <!-- Form content -->
-                    <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="0">
-                        <Label Text="Welcome back" FontFamily="Poppins" FontSize="Title" TextColor="Black" HorizontalOptions="Start" Margin="0,0,0,15" />
-                        <Label Text="Enter your credentials to access your account" FontFamily="Poppins" FontSize="12" TextColor="Gray" HorizontalOptions="Start" Margin="0,0,0,10" />
+            <Frame
+                Grid.Row="1"
+                Margin="10"
+                Padding="20"
+                BackgroundColor="White"
+                BorderColor="Transparent"
+                CornerRadius="15"
+                HasShadow="False">
+                <Grid ColumnDefinitions="*" RowDefinitions="Auto,Auto">
+                    <!--  Form content  -->
+                    <VerticalStackLayout
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Spacing="0">
+                        <Label
+                            Margin="0,0,0,15"
+                            FontFamily="Poppins"
+                            FontSize="Title"
+                            HorizontalOptions="Start"
+                            Text="Welcome back"
+                            TextColor="Black" />
+                        <Label
+                            Margin="0,0,0,10"
+                            FontFamily="Poppins"
+                            FontSize="12"
+                            HorizontalOptions="Start"
+                            Text="Enter your credentials to access your account"
+                            TextColor="Gray" />
 
-                        <material:TextField Title="Email" Text="{Binding Username}" Margin="0,0,0,10" x:Name="EmailTextField" AllowClear="True" IsTextPredictionEnabled="False" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
+                        <material:TextField
+                            x:Name="EmailTextField"
+                            Title="Email"
+                            Margin="0,0,0,10"
+                            AllowClear="True"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                            IsTextPredictionEnabled="False"
+                            Text="{Binding Username}" />
 
-                        <material:TextField Title="Password" Text="{Binding Password}" Margin="0,0,0,10" IsPassword="True" IsTextPredictionEnabled="False" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}">
+                        <material:TextField
+                            Title="Password"
+                            Margin="0,0,0,10"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                            IsPassword="True"
+                            IsTextPredictionEnabled="False"
+                            Text="{Binding Password}">
                             <material:TextField.Attachments>
                                 <material:TextFieldPasswordShowHideAttachment />
                             </material:TextField.Attachments>
@@ -35,22 +74,35 @@
 
                         <HorizontalStackLayout Margin="0,0,0,10">
                             <CheckBox IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
-                            <Label Text="Remember me" TextColor="Black" VerticalOptions="Center" />
+                            <Label
+                                Text="Remember me"
+                                TextColor="Black"
+                                VerticalOptions="Center" />
                         </HorizontalStackLayout>
 
-                        <Button Text="LOGIN" Command="{Binding LoginCommand}" BackgroundColor="{StaticResource PrimaryDark}" FontAttributes="Bold" Margin="0,0,0,10" TextColor="White" CornerRadius="15" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
+                        <Button
+                            Margin="0,0,0,10"
+                            BackgroundColor="{StaticResource PrimaryDark}"
+                            Command="{Binding LoginCommand}"
+                            CornerRadius="15"
+                            FontAttributes="Bold"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                            Text="LOGIN"
+                            TextColor="White" />
                     </VerticalStackLayout>
 
-                    <!-- Spinner overlay -->
+                    <!--  Spinner overlay  -->
                     <ActivityIndicator
-                        Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+                        Grid.Row="0"
+                        Grid.RowSpan="2"
+                        Grid.Column="0"
+                        HeightRequest="50"
+                        HorizontalOptions="Center"
                         IsRunning="{Binding IsBusy}"
                         IsVisible="{Binding IsBusy}"
-                        Color="{StaticResource PrimaryDark}"
                         VerticalOptions="Center"
-                        HorizontalOptions="Center"
                         WidthRequest="50"
-                        HeightRequest="50" />
+                        Color="{StaticResource PrimaryDark}" />
                 </Grid>
             </Frame>
         </Grid>

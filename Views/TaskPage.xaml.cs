@@ -4,16 +4,22 @@ namespace OfficeAnywhere.Mobile.Views
 {
     public partial class TaskPage : ContentPage
     {
+        private readonly TaskViewModel viewModel;
+
         public TaskPage(TaskViewModel viewModel)
         {
             InitializeComponent();
-            BindingContext = viewModel;
+            BindingContext = this.viewModel = viewModel;
+        }
+
+        protected async override void OnAppearing()
+        {
+            base.OnAppearing();
+            await viewModel.LoadTaskDataAsync();
         }
 
         protected override bool OnBackButtonPressed()
         {
-            // Prevents back navigation, which is fine for a login page
-            // If you want to allow back navigation or exit the app, modify this
             return true;
         }
     }

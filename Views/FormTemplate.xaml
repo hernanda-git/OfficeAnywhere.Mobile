@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="OfficeAnywhere.Mobile.Views.FormTemplate"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:OfficeAnywhere.Mobile.Converters"
+    xmlns:d="http://schemas.microsoft.com/dotnet/2021/maui/design"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+    xmlns:local="clr-namespace:OfficeAnywhere.Mobile.Views"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    Shell.NavBarIsVisible="False"
+    mc:Ignorable="d">
+    <ContentPage.Behaviors>
+        <toolkit:StatusBarBehavior StatusBarColor="{StaticResource PrimaryDark}" StatusBarStyle="Default" />
+    </ContentPage.Behaviors>
+
+    <ContentPage.Content>
+        <Grid
+            HorizontalOptions="Fill"
+            RowDefinitions="Auto,*"
+            VerticalOptions="Fill">
+            <ActivityIndicator
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                HorizontalOptions="Center"
+                IsRunning="{Binding IsBusy}"
+                IsVisible="{Binding IsBusy}"
+                VerticalOptions="Center"
+                Color="{StaticResource PrimaryDark}" />
+
+            <Grid
+                Grid.Row="0"
+                Margin="0"
+                Padding="20,25,20,20"
+                BackgroundColor="{StaticResource PrimaryDark}"
+                ColumnDefinitions="Auto,*"
+                HorizontalOptions="Fill"
+                VerticalOptions="Start">
+                <ImageButton
+                    Grid.Column="0"
+                    Command="{Binding BackCommand}"
+                    VerticalOptions="Center">
+                    <ImageButton.Source>
+                        <FontImageSource
+                            FontFamily="FASolid"
+                            Glyph=""
+                            Color="{StaticResource White}" />
+                    </ImageButton.Source>
+                    <ImageButton.Behaviors>
+                        <toolkit:TouchBehavior PressedScale="1.1" />
+                    </ImageButton.Behaviors>
+                </ImageButton>
+                <Label
+                    Grid.Column="1"
+                    FontAttributes="Bold"
+                    FontSize="23"
+                    HorizontalOptions="Center"
+                    Text="اختر نوع المهمة"
+                    TextColor="{StaticResource White}"
+                    VerticalOptions="Center" />
+            </Grid>
+            <ScrollView
+                Grid.Row="1"
+                HorizontalOptions="Fill"
+                VerticalOptions="Fill">
+                <VerticalStackLayout Padding="20" HorizontalOptions="Fill">
+
+                    <material:PickerField
+                        Title="اختر نوع المهمة"
+                        Margin="0,0,0,20"
+                        FlowDirection="RightToLeft"
+                        FontSize="24"
+                        ItemDisplayBinding="{Binding Name}"
+                        ItemsSource="{Binding TaskType}"
+                        SelectedItem="{Binding SelectedTaskType, Mode=TwoWay}">
+                        <material:PickerField.Icon>
+                            <FontImageSource
+                                FontFamily="FASolid"
+                                Glyph=""
+                                Color="{StaticResource PrimaryDarkText}" />
+                        </material:PickerField.Icon>
+                    </material:PickerField>
+                    <material:PickerField
+                        Title="اختر الموظف"
+                        Margin="0,0,0,20"
+                        FlowDirection="RightToLeft"
+                        FontSize="24"
+                        ItemDisplayBinding="{Binding UserName}"
+                        ItemsSource="{Binding Users}">
+                        <material:PickerField.Icon>
+                            <FontImageSource
+                                FontFamily="FASolid"
+                                Glyph=""
+                                Color="{StaticResource PrimaryDarkText}" />
+                        </material:PickerField.Icon>
+                    </material:PickerField>
+
+                    <VerticalStackLayout x:Name="FormLayout" BindableLayout.ItemsSource="{Binding DynamicContents}">
+                        <VerticalStackLayout
+                            Padding="20"
+                            FlowDirection="RightToLeft"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="Fill" />
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
