@@ -33,6 +33,7 @@ namespace OfficeAnywhere.Mobile
             builder.Services.AddSingleton<AuthService>();
             builder.Services.AddSingleton<TaskService>();
             builder.Services.AddSingleton<FormTemplateService>();
+            builder.Services.AddSingleton<HttpClient>();
 
             builder.Services.AddTransient<LoginViewModel>();
             builder.Services.AddTransient<Login>();

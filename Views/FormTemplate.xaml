@@ -74,7 +74,8 @@
                         FontSize="24"
                         ItemDisplayBinding="{Binding Name}"
                         ItemsSource="{Binding TaskType}"
-                        SelectedItem="{Binding SelectedTaskType, Mode=TwoWay}">
+                        SelectedItem="{Binding SelectedTaskType, Mode=TwoWay}"
+                        SelectedValueChanged="PickerField_SelectedValueChanged">
                         <material:PickerField.Icon>
                             <FontImageSource
                                 FontFamily="FASolid"
@@ -97,13 +98,11 @@
                         </material:PickerField.Icon>
                     </material:PickerField>
 
-                    <VerticalStackLayout x:Name="FormLayout" BindableLayout.ItemsSource="{Binding DynamicContents}">
-                        <VerticalStackLayout
-                            Padding="20"
-                            FlowDirection="RightToLeft"
-                            HorizontalOptions="Fill"
-                            VerticalOptions="Fill" />
-                    </VerticalStackLayout>
+                    <VerticalStackLayout
+                        x:Name="FormLayout"
+                        FlowDirection="RightToLeft"
+                        HorizontalOptions="Fill"
+                        VerticalOptions="Fill" />
 
                 </VerticalStackLayout>
             </ScrollView>

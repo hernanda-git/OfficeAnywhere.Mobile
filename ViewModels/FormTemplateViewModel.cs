@@ -6,6 +6,7 @@ using OfficeAnywhere.Mobile.Models;
 using OfficeAnywhere.Mobile.Services;
 using OfficeAnywhere.Mobile.Views;
 using System.Collections.ObjectModel;
+using System.Net.Http;
 using System.Text.Json;
 using System.Windows.Input;
 using UraniumUI.Material.Controls;
@@ -24,6 +25,7 @@ public class DynamicField
 public partial class FormTemplateViewModel : ObservableObject
 {
     private readonly FormTemplateService _formTemplateService;
+    private readonly HttpClient _httpClient;
 
     [ObservableProperty]
     private ObservableCollection<View> dynamicContents = new();
@@ -46,9 +48,10 @@ public partial class FormTemplateViewModel : ObservableObject
     [ObservableProperty]
     private UserModelV2? selectedUser = null;
 
-    public FormTemplateViewModel(FormTemplateService formTemplateService)
+    public FormTemplateViewModel(FormTemplateService formTemplateService, HttpClient httpClient)
     {
         _formTemplateService = formTemplateService;
+        _httpClient = httpClient;
         InitializeAsync();
     }
 
@@ -152,6 +155,7 @@ public partial class FormTemplateViewModel : ObservableObject
             foreach (JsonElement component in componentsArray.EnumerateArray())
             {
                 string? label = component.TryGetProperty("label", out JsonElement labelElement) ? labelElement.GetString() : string.Empty;
+                string? legend = component.TryGetProperty("legend", out JsonElement legendElement) ? legendElement.GetString() : string.Empty;
                 string? description = component.TryGetProperty("description", out JsonElement descElement) ? descElement.GetString() : string.Empty;
                 string? content = component.TryGetProperty("content", out JsonElement contentElement) ? contentElement.GetString() : string.Empty;
                 string? type = component.TryGetProperty("type", out JsonElement typeElement) ? typeElement.GetString() : string.Empty;
@@ -159,26 +163,183 @@ public partial class FormTemplateViewModel : ObservableObject
                 string? key = component.TryGetProperty("key", out JsonElement keyElement) ? keyElement.GetString() : string.Empty;
                 string? inputType = component.TryGetProperty("inputType", out JsonElement inputTypeElement) ? inputTypeElement.GetString() : string.Empty;
 
-                if (type == "htmlelement")
+                if (type?.ToLower() == "htmlelement")
                 {
-                    DynamicContents.Add(CreateLabel(content, id, FontSizeOption.Large));
+                    if (!string.IsNullOrEmpty(content))
+                    {
+                        DynamicContents.Add(CreateLabel(content, id, FontSizeOption.Large));
+                    }
                 }
 
-                if (type == "datagrid")
+                if (type?.ToLower() == "datagrid")
                 {
-                    DynamicContents.Add(CreateLabel(description, id, FontSizeOption.Medium));
+                    if (!string.IsNullOrEmpty(description))
+                    {
+                        DynamicContents.Add(CreateLabel(description, id, FontSizeOption.Medium));
+                    }
+
+                    if (component.TryGetProperty("components", out JsonElement dataGridComponents))
+                    {
+                        processComponents(dataGridComponents);
+                    }
                 }
 
-                if (type == "textfield")
+                if (type?.ToLower() == "fieldset")
+                {
+                    if (!string.IsNullOrEmpty(legend))
+                    {
+                        DynamicContents.Add(CreateLabel(legend, id, FontSizeOption.Medium));
+                    }
+
+                    if (component.TryGetProperty("components", out JsonElement fieldSetComponents))
+                    {
+                        processComponents(fieldSetComponents);
+                    }
+                }
+
+                if (type?.ToLower() == "textfield")
                 {
                     DynamicContents.Add(CreateTextField(label, key));
                 }
 
-                if (type == "textarea")
+                if (type?.ToLower() == "textarea")
                 {
                     DynamicContents.Add(CreateEditorField(label, key));
+
+                    if (component.TryGetProperty("components", out JsonElement fieldSetComponents))
+                    {
+                        processComponents(fieldSetComponents);
+                    }
                 }
 
+                if (type == "select")
+                {
+                    List<SelectOption> options = new();
+                    bool isRequired = component.TryGetProperty("validate", out JsonElement validateElement) && validateElement.TryGetProperty("required", out JsonElement requiredElement) && requiredElement.GetBoolean();
+
+                    if (component.TryGetProperty("dataSrc", out JsonElement dataSrcElement) && dataSrcElement.GetString() == "url")
+                    {
+                        if (component.TryGetProperty("data", out JsonElement dataElement) && dataElement.TryGetProperty("url", out JsonElement urlElement))
+                        {
+                            string url = urlElement.GetString() ?? string.Empty;
+                            Dictionary<string, string> headers = new();
+                            if (dataElement.TryGetProperty("headers", out JsonElement headersElement) && headersElement.ValueKind == JsonValueKind.Array)
+                            {
+                                foreach (JsonElement header in headersElement.EnumerateArray())
+                                {
+                                    string headerKey = header.TryGetProperty("key", out JsonElement keyEl) ? keyEl.GetString() ?? string.Empty : string.Empty;
+                                    string headerValue = header.TryGetProperty("value", out JsonElement valueEl) ? valueEl.GetString() ?? string.Empty : string.Empty;
+                                    if (!string.IsNullOrEmpty(headerKey) && !string.IsNullOrEmpty(headerValue))
+                                    {
+                                        headers.Add(headerKey, headerValue);
+                                    }
+                                }
+                            }
+
+                            string valueProperty = component.TryGetProperty("valueProperty", out JsonElement valuePropElement) ? valuePropElement.GetString() ?? "Id" : "Id";
+                            string displayProperty = component.TryGetProperty("template", out JsonElement templateElement) && templateElement.GetString()?.Contains("item.Name") == true ? "Name" : "value";
+
+                            try
+                            {
+                                var request = new HttpRequestMessage(HttpMethod.Get, url);
+                                string accessToken = SecureStorage.GetAsync("AccessToken").Result ?? "";
+                                string tenant = SecureStorage.GetAsync("Tenant").Result ?? "";
+                                foreach (var header in headers)
+                                {
+                                    string value = header.Key.ToLower() == "tenant" ? tenant : header.Value;
+                                    request.Headers.Add(header.Key, value);
+                                }
+                                request.Headers.Add("Authentication", $"Bearer {accessToken}");
+
+                                var response = _httpClient.SendAsync(request).Result;
+                                response.EnsureSuccessStatusCode();
+                                string jsonResponse = response.Content.ReadAsStringAsync().Result;
+
+                                using JsonDocument doc = JsonDocument.Parse(jsonResponse);
+                                JsonElement root = doc.RootElement;
+
+                                if (root.ValueKind == JsonValueKind.Array)
+                                {
+                                    foreach (JsonElement item in root.EnumerateArray())
+                                    {
+                                        string value = item.TryGetProperty(valueProperty, out JsonElement valEl) ? valEl.ToString() : string.Empty;
+                                        string display = item.TryGetProperty(displayProperty, out JsonElement dispEl) ? dispEl.GetString() ?? value : value;
+                                        if (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(display))
+                                        {
+                                            options.Add(new SelectOption { Value = value, Display = display });
+                                        }
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error fetching select options from {url}: {ex.Message}");
+                            }
+                        }
+                    }
+                    else if (component.TryGetProperty("data", out JsonElement dataElement) && dataElement.TryGetProperty("values", out JsonElement valuesElement) && valuesElement.ValueKind == JsonValueKind.Array)
+                    {
+                        foreach (JsonElement value in valuesElement.EnumerateArray())
+                        {
+                            if (value.TryGetProperty("label", out JsonElement labelValue) && value.TryGetProperty("value", out JsonElement valueValue))
+                            {
+                                string display = labelValue.GetString() ?? string.Empty;
+                                string val = valueValue.GetString() ?? string.Empty;
+                                if (!string.IsNullOrEmpty(display) && !string.IsNullOrEmpty(val))
+                                {
+                                    options.Add(new SelectOption { Display = display, Value = val });
+                                }
+                            }
+                        }
+                    }
+
+                    var picker = CreatePickerField(label, options.Select(o => o.Display), options.FirstOrDefault()?.Display);
+                    picker.StyleId = key;
+                    DynamicContents.Add(picker);
+                }
+
+                if (type?.ToLower() == "button")
+                {
+                    DynamicContents.Add(CreateButton(label, key));
+                }
+
+                if (type?.ToLower() == "table")
+                {
+                    if (component.TryGetProperty("rows", out JsonElement rowsElement) && component.TryGetProperty("numRows", out JsonElement numRowsElement))
+                    {
+                        int numRows = numRowsElement.GetInt32();
+
+                        foreach (JsonElement row in rowsElement.EnumerateArray())
+                        {
+                            foreach (JsonElement cell in row.EnumerateArray())
+                            {
+                                if (cell.TryGetProperty("components", out JsonElement cellComponents))
+                                {
+                                    processComponents(cellComponents);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if(component.TryGetProperty("table", out JsonElement tableElement))
+                {
+                    if (component.TryGetProperty("rows", out JsonElement rowsElement) && component.TryGetProperty("numRows", out JsonElement numRowsElement))
+                    {
+                        int numRows = numRowsElement.GetInt32();
+
+                        foreach (JsonElement row in rowsElement.EnumerateArray())
+                        {
+                            foreach (JsonElement cell in row.EnumerateArray())
+                            {
+                                if (cell.TryGetProperty("components", out JsonElement cellComponents))
+                                {
+                                    processComponents(cellComponents);
+                                }
+                            }
+                        }
+                    }
+                }
                 if (component.TryGetProperty("components", out JsonElement subComponents) && subComponents.ValueKind == JsonValueKind.Array)
                 {
                     processComponents(subComponents);
@@ -189,6 +350,39 @@ public partial class FormTemplateViewModel : ObservableObject
         {
 
         }
+    }
+
+    //public class RequiredValidationBehavior : Behavior<PickerField>
+    //{
+    //    protected override void OnAttachedTo(PickerField bindable)
+    //    {
+    //        base.OnAttachedTo(bindable);
+    //        bindable.SelectedIndexChanged += OnSelectedIndexChanged;
+    //    }
+
+    //    protected override void OnDetachingFrom(PickerField bindable)
+    //    {
+    //        base.OnDetachingFrom(bindable);
+    //        bindable.SelectedIndexChanged -= OnSelectedIndexChanged;
+    //    }
+
+    //    private void OnSelectedIndexChanged(object sender, EventArgs e)
+    //    {
+    //        var picker = (PickerField)sender;
+    //        if (picker.SelectedItem == null || string.IsNullOrEmpty(picker.SelectedItem.ToString()))
+    //        {
+    //            picker.BackgroundColor = Colors.LightPink;
+    //        }
+    //        else
+    //        {
+    //            picker.BackgroundColor = Colors.White;
+    //        }
+    //    }
+    //}
+    public class SelectOption
+    {
+        public string Value { get; set; } = string.Empty;
+        public string Display { get; set; } = string.Empty;
     }
 
     private Label CreateLabel(string text, string id, FontSizeOption fontSize, Thickness? margin = null)
@@ -210,6 +404,8 @@ public partial class FormTemplateViewModel : ObservableObject
         {
             Text = text,
             StyleId = id,
+            FontAttributes = FontAttributes.Bold,
+            HeightRequest = 45,
             FontSize = (double)FontSizeOption.Medium,
             Margin = margin ?? new Thickness(0, 0, 0, 20)
         };

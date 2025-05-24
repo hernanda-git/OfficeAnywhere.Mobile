@@ -13,12 +13,6 @@ namespace OfficeAnywhere.Mobile.Views
         {
             InitializeComponent();
             BindingContext = this.viewModel = viewModel;
-
-            FormLayout.Children.Clear();
-            foreach (var view in viewModel.DynamicContents)
-            {
-                FormLayout.Children.Add(view);
-            }
         }
 
         protected override bool OnBackButtonPressed()
@@ -150,7 +144,16 @@ namespace OfficeAnywhere.Mobile.Views
         //    }
         //}
 
-       
+
         #endregion
+
+        private void PickerField_SelectedValueChanged(object sender, object e)
+        {
+            FormLayout.Children.Clear();
+            foreach (var view in viewModel.DynamicContents)
+            {
+                FormLayout.Children.Add(view);
+            }
+        }
     }
 }
