@@ -212,6 +212,39 @@ public partial class FormTemplateViewModel : ObservableObject
                     }
                 }
 
+                if(type?.ToLower() == "radio")
+                {
+                    if (!string.IsNullOrEmpty(label))
+                    {
+                        DynamicContents.Add(CreateLabel(label, id, FontSizeOption.Medium));
+                    }
+
+                    if (component.TryGetProperty("values", out JsonElement values) && values.ValueKind == JsonValueKind.Array)
+                    {
+                        List<RadioButtonOption> options = [];
+                       
+                        foreach (JsonElement row in values.EnumerateArray())
+                        {
+                            row.TryGetProperty("label", out JsonElement labElement);
+                            row.TryGetProperty("value", out JsonElement valueElement);
+                            row.TryGetProperty("shortcut", out JsonElement shortcutElement);
+
+                            string labelString =  labElement.GetString() ?? string.Empty;
+                            string valueString =  valueElement.GetString() ?? string.Empty;
+                            string shortcutString =  shortcutElement.GetString() ?? string.Empty;
+
+                            options.Add(new RadioButtonOption
+                            {
+                                Label = labelString,
+                                Value = valueString,
+                                Shortcut = shortcutString
+                            });
+
+                        }
+                        DynamicContents.Add(createRadioButtonGroup(options));
+                    }
+                }
+
                 if (type == "select")
                 {
                     List<SelectOption> options = new();
@@ -300,7 +333,11 @@ public partial class FormTemplateViewModel : ObservableObject
 
                 if (type?.ToLower() == "button")
                 {
-                    DynamicContents.Add(CreateButton(label, key));
+                    if (!string.IsNullOrEmpty(label))
+                    {
+                        DynamicContents.Add(CreateLabel(label, id, FontSizeOption.Medium));
+                    }
+
                 }
 
                 if (type?.ToLower() == "table")
@@ -352,33 +389,6 @@ public partial class FormTemplateViewModel : ObservableObject
         }
     }
 
-    //public class RequiredValidationBehavior : Behavior<PickerField>
-    //{
-    //    protected override void OnAttachedTo(PickerField bindable)
-    //    {
-    //        base.OnAttachedTo(bindable);
-    //        bindable.SelectedIndexChanged += OnSelectedIndexChanged;
-    //    }
-
-    //    protected override void OnDetachingFrom(PickerField bindable)
-    //    {
-    //        base.OnDetachingFrom(bindable);
-    //        bindable.SelectedIndexChanged -= OnSelectedIndexChanged;
-    //    }
-
-    //    private void OnSelectedIndexChanged(object sender, EventArgs e)
-    //    {
-    //        var picker = (PickerField)sender;
-    //        if (picker.SelectedItem == null || string.IsNullOrEmpty(picker.SelectedItem.ToString()))
-    //        {
-    //            picker.BackgroundColor = Colors.LightPink;
-    //        }
-    //        else
-    //        {
-    //            picker.BackgroundColor = Colors.White;
-    //        }
-    //    }
-    //}
     public class SelectOption
     {
         public string Value { get; set; } = string.Empty;
@@ -460,7 +470,36 @@ public partial class FormTemplateViewModel : ObservableObject
         };
     }
 
-    // Function to create a RadioButtonGroupView
+    public class RadioButtonOption
+    {
+        public string Label { get; set; } = string.Empty;
+        public string Value { get; set; } = string.Empty;
+        public string Shortcut { get; set; } = string.Empty;
+    }
+    private RadioButtonGroupView createRadioButtonGroup(List<RadioButtonOption> options, Thickness? margin = null)
+    {
+        RadioButtonGroupView radioButtonGroupView = new RadioButtonGroupView
+        {
+            Margin = margin ?? new Thickness(0, 0, 0, 20),
+            //Orientation = StackOrientation.Horizontal,
+        };
+
+        int optionIndex = 0;
+        foreach (RadioButtonOption option in options)
+        {
+            radioButtonGroupView.Children.Add(new UraniumUI.Material.Controls.RadioButton
+            {
+                Text = option.Label,
+                Value = option.Value,
+                TextFontSize = (double)FontSizeOption.Medium,
+                IsChecked = optionIndex == 0
+            });
+            optionIndex++;
+        }
+
+        return radioButtonGroupView;
+    }
+
     private RadioButtonGroupView CreateRadioButtonGroupView(string[] options, string[] values, Thickness? margin = null)
     {
         if (options.Length != values.Length)
@@ -478,7 +517,8 @@ public partial class FormTemplateViewModel : ObservableObject
             radioButtonGroupView.Children.Add(new UraniumUI.Material.Controls.RadioButton
             {
                 Text = options[i],
-                Value = values[i]
+                Value = values[i],
+                IsChecked = true
             });
         }
 
