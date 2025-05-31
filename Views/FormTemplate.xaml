@@ -98,6 +98,63 @@
                         </material:PickerField.Icon>
                     </material:PickerField>
 
+                    <Grid
+                        Margin="0,0,0,20"
+                        Padding="0"
+                        ColumnDefinitions="6*,4*"
+                        ColumnSpacing="15"
+                        RowDefinitions="Auto">
+                        <Frame Padding="0" HasShadow="False">
+                            <Grid
+                                Padding="0"
+                                ColumnDefinitions="7.5*,2.5*"
+                                ColumnSpacing="10"
+                                HeightRequest="45"
+                                RowDefinitions="*,*">
+                                <Label
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    FlowDirection="RightToLeft"
+                                    FontAttributes="Bold"
+                                    FontSize="18"
+                                    Text="المرفقات" />
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    FlowDirection="RightToLeft"
+                                    FontSize="18"
+                                    Text="قم برفع ملفات أو صور" />
+                                <ImageButton
+                                    Grid.Row="0"
+                                    Grid.RowSpan="2"
+                                    Grid.Column="1"
+                                    Margin="0,0,10,0"
+                                    Padding="5"
+                                    BackgroundColor="{StaticResource TertiaryUltraLight}"
+                                    CornerRadius="10">
+                                    <ImageButton.Source>
+                                        <FontImageSource
+                                            FontFamily="FASolid"
+                                            Glyph="&#xf0ee;"
+                                            Color="{StaticResource PrimaryDark}" />
+                                    </ImageButton.Source>
+                                </ImageButton>
+                            </Grid>
+                        </Frame>
+
+                        <material:TextField
+                            Title="عدد الأيام"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="0,-5,0,0"
+                            FlowDirection="RightToLeft"
+                            FontSize="24"
+                            IsEnabled="True"
+                            IsTextPredictionEnabled="False"
+                            Text="{Binding NumberOfDays}"
+                            TitleFontSize="24" />
+                    </Grid>
+
                     <VerticalStackLayout
                         x:Name="FormLayout"
                         FlowDirection="RightToLeft"

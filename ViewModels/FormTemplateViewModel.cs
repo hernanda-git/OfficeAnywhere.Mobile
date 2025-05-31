@@ -268,7 +268,7 @@ public partial class FormTemplateViewModel : ObservableObject
 
                 if (type?.ToLower() == "datagrid")
                 {
-                    DynamicContents.Add(generateDataGrid(component));
+                    DynamicContents.Add(GenerateDataGrid(component));
                 }
 
                 if (type?.ToLower() == "fieldset")
@@ -480,9 +480,252 @@ public partial class FormTemplateViewModel : ObservableObject
         }
     }
 
-    private View generateDataGrid(JsonElement dataGridComponent)
+    //private View generateDataGrid(JsonElement dataGridComponent)
+    //{
+    //    StackLayout stackLayoutParent = new StackLayout
+    //    {
+    //        HorizontalOptions = LayoutOptions.Fill,
+    //        VerticalOptions = LayoutOptions.Start,
+    //        Margin = new Thickness(0, 0, 0, 20)
+    //    };
+
+    //    ScrollView scrollView = new ScrollView
+    //    {
+    //        Orientation = ScrollOrientation.Horizontal,
+    //        HorizontalOptions = LayoutOptions.Fill,
+    //        Margin = new Thickness(0, 0, 0, 20)
+    //    };
+
+    //    try
+    //    {
+    //        string? dataGridKey = dataGridComponent.TryGetProperty("key", out JsonElement dataGridKeyElement) ? dataGridKeyElement.GetString() : string.Empty;
+    //        string? label = dataGridComponent.TryGetProperty("label", out JsonElement labelElement) ? labelElement.GetString() : string.Empty;
+    //        string? legend = dataGridComponent.TryGetProperty("legend", out JsonElement legendElement) ? legendElement.GetString() : string.Empty;
+    //        string? description = dataGridComponent.TryGetProperty("description", out JsonElement descElement) ? descElement.GetString() : string.Empty;
+    //        string? addAnother = dataGridComponent.TryGetProperty("addAnother", out JsonElement addAnotherElement) ? addAnotherElement.GetString() : string.Empty;
+    //        string? content = dataGridComponent.TryGetProperty("content", out JsonElement contentElement) ? contentElement.GetString() : string.Empty;
+
+    //        Grid dataGrid = new Grid();
+    //        dataGrid.ColumnSpacing = 0;
+    //        dataGrid.RowSpacing = 0;
+
+    //        if (dataGridComponent.TryGetProperty("components", out JsonElement gridElements) &&
+    //            gridElements.ValueKind == JsonValueKind.Array)
+    //        {
+    //            int columnCount = gridElements.GetArrayLength();
+
+    //            // Define initial rows: headers, one input row, and button row
+    //            dataGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Header row
+    //            dataGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Initial input row
+    //            dataGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Button row
+
+    //            // Define one column per component
+    //            for (int i = 0; i < columnCount; i++)
+    //            {
+    //                dataGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+    //            }
+
+    //            int columnIndex = 0;
+
+    //            // First row: headers with borders
+    //            foreach (JsonElement element in gridElements.EnumerateArray())
+    //            {
+    //                string? id = element.TryGetProperty("id", out JsonElement idElement) ? idElement.GetString() : string.Empty;
+    //                string? header = element.TryGetProperty("label", out JsonElement headerElement) ? headerElement.GetString() : string.Empty;
+
+    //                var cellLabel = new Label
+    //                {
+    //                    Text = header,
+    //                    StyleId = id,
+    //                    FontSize = (double)FontSizeOption.Description,
+    //                    FontAttributes = FontAttributes.Bold,
+    //                    HorizontalOptions = LayoutOptions.Center,
+    //                    VerticalOptions = LayoutOptions.Center,
+    //                    HorizontalTextAlignment = TextAlignment.Center,
+    //                    VerticalTextAlignment = TextAlignment.Center,
+    //                    Padding = new Thickness(10)
+    //                };
+
+    //                var cellFrame = new Frame
+    //                {
+    //                    Content = cellLabel,
+    //                    BorderColor = Colors.Gray,
+    //                    Padding = 0,
+    //                    CornerRadius = 0,
+    //                    Margin = 0,
+    //                    HasShadow = false
+    //                };
+
+    //                Grid.SetRow(cellFrame, 0);
+    //                Grid.SetColumn(cellFrame, columnIndex);
+    //                dataGrid.Children.Add(cellFrame);
+
+    //                columnIndex++;
+    //            }
+
+    //            columnIndex = 0;
+
+    //            // Second row: initial input fields with borders
+    //            foreach (JsonElement element in gridElements.EnumerateArray())
+    //            {
+    //                string? key = element.TryGetProperty("key", out JsonElement keyElement) ? keyElement.GetString() : string.Empty;
+
+    //                var entry = new TextField
+    //                {
+    //                    StyleId = $"data[{dataGridKey}][{(rowCount - 2)}][{key}]",
+    //                    FontSize = (double)FontSizeOption.Medium,
+    //                    Keyboard = Keyboard.Text,
+    //                    WidthRequest = 200,
+    //                    HorizontalOptions = LayoutOptions.Fill,
+    //                    VerticalOptions = LayoutOptions.Center,
+    //                    Margin = new Thickness(5, 0)
+    //                };
+
+    //                var cellFrame = new Frame
+    //                {
+    //                    Content = entry,
+    //                    BorderColor = Colors.Gray,
+    //                    Padding = 5,
+    //                    CornerRadius = 0,
+    //                    Margin = 0,
+    //                    HasShadow = false
+    //                };
+
+    //                Grid.SetRow(cellFrame, 1);
+    //                Grid.SetColumn(cellFrame, columnIndex);
+    //                dataGrid.Children.Add(cellFrame);
+
+    //                columnIndex++;
+    //            }
+
+
+    //            // Add "Add Another" button in the last row, spanning all columns
+    //            var addButton = new Button
+    //            {
+    //                Text = addAnother ?? "Add Another",
+    //                HorizontalOptions = LayoutOptions.Start,
+    //                VerticalOptions = LayoutOptions.Start,
+    //                Margin = new Thickness(10)
+    //            };
+
+    //            // Safely access resources
+    //            if (App.Current.Resources.TryGetValue("PrimaryDark", out var primaryDark) && primaryDark is Color primaryDarkColor)
+    //            {
+    //                addButton.BackgroundColor = primaryDarkColor;
+    //            }
+    //            else
+    //            {
+    //                addButton.BackgroundColor = Colors.DarkBlue;
+    //            }
+
+    //            if (App.Current.Resources.TryGetValue("White", out var white) && white is Color whiteColor)
+    //            {
+    //                addButton.TextColor = whiteColor;
+    //            }
+    //            else
+    //            {
+    //                addButton.TextColor = Colors.White;
+    //            }
+
+    //            var buttonFrame = new Frame
+    //            {
+    //                Content = addButton,
+    //                BorderColor = Colors.Gray,
+    //                Padding = 5,
+    //                CornerRadius = 0,
+    //                Margin = 0,
+    //                HasShadow = false
+    //            };
+
+    //            Grid.SetRow(buttonFrame, 2);
+    //            Grid.SetColumnSpan(buttonFrame, columnCount);
+    //            dataGrid.Children.Add(buttonFrame);
+
+    //            // Handle button click to add new input row
+    //            int rowCount = 2; // Start with 2 rows (header + first input row)
+    //            addButton.Clicked += (sender, args) =>
+    //            {
+    //                // Remove button from current row
+    //                dataGrid.Children.Remove(buttonFrame);
+    //                dataGrid.RowDefinitions.RemoveAt(rowCount); // Remove button row
+
+    //                // Add new input row
+    //                rowCount++;
+    //                dataGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // New input row
+
+    //                columnIndex = 0;
+    //                foreach (JsonElement element in gridElements.EnumerateArray())
+    //                {
+    //                    string? key = element.TryGetProperty("key", out JsonElement keyElement) ? keyElement.GetString() : string.Empty;
+
+    //                    var entry = new TextField
+    //                    {
+    //                        StyleId = $"data[{dataGridKey}][{(rowCount - 2)}][{key}]",
+    //                        FontSize = (double)FontSizeOption.Medium,
+    //                        Keyboard = Keyboard.Text,
+    //                        WidthRequest = 200,
+    //                        HorizontalOptions = LayoutOptions.Fill,
+    //                        VerticalOptions = LayoutOptions.Center,
+    //                        Margin = new Thickness(5, 0)
+    //                    };
+
+    //                    var cellFrame = new Frame
+    //                    {
+    //                        Content = entry,
+    //                        BorderColor = Colors.Gray,
+    //                        Padding = 5,
+    //                        CornerRadius = 0,
+    //                        Margin = 0,
+    //                        HasShadow = false
+    //                    };
+
+    //                    Grid.SetRow(cellFrame, rowCount - 1);
+    //                    Grid.SetColumn(cellFrame, columnIndex);
+    //                    dataGrid.Children.Add(cellFrame);
+
+    //                    columnIndex++;
+    //                }
+
+    //                // Add button row back at the end
+    //                dataGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+    //                Grid.SetRow(buttonFrame, rowCount);
+    //                dataGrid.Children.Add(buttonFrame);
+    //            };
+
+    //            scrollView.Content = dataGrid;
+    //            stackLayoutParent.Children.Add(scrollView);
+
+    //            if (!string.IsNullOrEmpty(description))
+    //            {
+    //                string? id = dataGridComponent.TryGetProperty("id", out JsonElement idElement) ? idElement.GetString() : string.Empty;
+
+    //                var labelComponent = new Label
+    //                {
+    //                    Text = description,
+    //                    IsVisible = true,
+    //                    StyleId = id,
+    //                    FontSize = (double)FontSizeOption.Description,
+    //                    FontAttributes = FontAttributes.Bold,
+    //                    Margin = new Thickness(0, 0, 0, 20)
+    //                };
+    //                stackLayoutParent.Children.Add(labelComponent);
+    //            }
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Console.WriteLine("Error in generateDataGrid: " + ex.Message);
+    //    }
+
+    //    return stackLayoutParent;
+    //}
+
+    // Dictionary to store gridElements for each data grid, keyed by dataGridKey
+    private static readonly Dictionary<string, JsonElement> GridElementsCache = new Dictionary<string, JsonElement>();
+
+    private View GenerateDataGrid(JsonElement dataGridComponent)
     {
-        StackLayout stacklayoutParent = new StackLayout
+        StackLayout stackLayoutParent = new StackLayout
         {
             HorizontalOptions = LayoutOptions.Fill,
             VerticalOptions = LayoutOptions.Start,
@@ -498,39 +741,34 @@ public partial class FormTemplateViewModel : ObservableObject
 
         try
         {
+            string? dataGridKey = dataGridComponent.TryGetProperty("key", out JsonElement dataGridKeyElement) ? dataGridKeyElement.GetString() : string.Empty;
             string? label = dataGridComponent.TryGetProperty("label", out JsonElement labelElement) ? labelElement.GetString() : string.Empty;
             string? legend = dataGridComponent.TryGetProperty("legend", out JsonElement legendElement) ? legendElement.GetString() : string.Empty;
             string? description = dataGridComponent.TryGetProperty("description", out JsonElement descElement) ? descElement.GetString() : string.Empty;
+            string? addAnother = dataGridComponent.TryGetProperty("addAnother", out JsonElement addAnotherElement) ? addAnotherElement.GetString() : "Add Another";
             string? content = dataGridComponent.TryGetProperty("content", out JsonElement contentElement) ? contentElement.GetString() : string.Empty;
 
-            if (!string.IsNullOrEmpty(description))
+            Grid dataGrid = new Grid
             {
-                string? id = dataGridComponent.TryGetProperty("id", out JsonElement idElement) ? idElement.GetString() : string.Empty;
-
-                var labelComponent = new Label
-                {
-                    Text = description,
-                    IsVisible = true,
-                    StyleId = id,
-                    FontSize = (double)FontSizeOption.Description,
-                    FontAttributes = FontAttributes.Bold,
-                    Margin = new Thickness(0, 0, 0, 20)
-                };
-                stacklayoutParent.Children.Add(labelComponent);
-            }
-
-            Grid dataGrid = new Grid();
-            dataGrid.ColumnSpacing = 0;
-            dataGrid.RowSpacing = 0;
+                ColumnSpacing = 0,
+                RowSpacing = 0
+            };
 
             if (dataGridComponent.TryGetProperty("components", out JsonElement gridElements) &&
                 gridElements.ValueKind == JsonValueKind.Array)
             {
+                // Store a clone of gridElements to prevent disposal issues
+                if (!string.IsNullOrEmpty(dataGridKey))
+                {
+                    GridElementsCache[dataGridKey] = gridElements.Clone();
+                }
+
                 int columnCount = gridElements.GetArrayLength();
 
-                // Define two rows: one for labels, one for inputs
-                dataGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-                dataGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                // Define initial rows: headers, one input row, and button row
+                dataGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Header row
+                dataGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Initial input row
+                dataGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Button row
 
                 // Define one column per component
                 for (int i = 0; i < columnCount; i++)
@@ -569,7 +807,6 @@ public partial class FormTemplateViewModel : ObservableObject
                         HasShadow = false
                     };
 
-
                     Grid.SetRow(cellFrame, 0);
                     Grid.SetColumn(cellFrame, columnIndex);
                     dataGrid.Children.Add(cellFrame);
@@ -577,57 +814,133 @@ public partial class FormTemplateViewModel : ObservableObject
                     columnIndex++;
                 }
 
-                columnIndex = 0;
+                // Second row: initial input fields
+                int rowCount = 2; // Start with 2 rows (header + first input row)
+                AddInputRow(dataGrid, GridElementsCache[dataGridKey], dataGridKey, rowCount - 1);
 
-                // Second row: input fields with borders
-                foreach (JsonElement element in gridElements.EnumerateArray())
+                // Add "Add Another" button in the last row, spanning all columns
+                var addButton = new Button
                 {
-                    string? key = element.TryGetProperty("key", out JsonElement keyElement) ? keyElement.GetString() : string.Empty;
+                    Text = addAnother ?? "Add Another",
+                    HorizontalOptions = LayoutOptions.Start,
+                    VerticalOptions = LayoutOptions.Start,
+                    Margin = new Thickness(10)
+                };
 
-                    var entry = new Entry
+                // Safely access resources
+                if (App.Current.Resources.TryGetValue("PrimaryDark", out var primaryDark) && primaryDark is Color primaryDarkColor)
+                {
+                    addButton.BackgroundColor = primaryDarkColor;
+                }
+                else
+                {
+                    addButton.BackgroundColor = Colors.DarkBlue;
+                }
+
+                if (App.Current.Resources.TryGetValue("White", out var white) && white is Color whiteColor)
+                {
+                    addButton.TextColor = whiteColor;
+                }
+                else
+                {
+                    addButton.TextColor = Colors.White;
+                }
+
+                var buttonFrame = new Frame
+                {
+                    Content = addButton,
+                    BorderColor = Colors.Gray,
+                    Padding = 5,
+                    CornerRadius = 0,
+                    Margin = 0,
+                    HasShadow = false
+                };
+
+                Grid.SetRow(buttonFrame, rowCount);
+                Grid.SetColumnSpan(buttonFrame, columnCount);
+                dataGrid.Children.Add(buttonFrame);
+
+                // Handle button click to add new input row
+                addButton.Clicked += (sender, args) =>
+                {
+                    // Remove button from current row
+                    dataGrid.Children.Remove(buttonFrame);
+                    dataGrid.RowDefinitions.RemoveAt(rowCount); // Remove button row
+
+                    // Add new input row
+                    rowCount++;
+                    dataGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // New input row
+                    AddInputRow(dataGrid, GridElementsCache[dataGridKey], dataGridKey, rowCount - 1);
+
+                    // Add button row back at the end
+                    dataGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                    Grid.SetRow(buttonFrame, rowCount);
+                    dataGrid.Children.Add(buttonFrame);
+                };
+
+                scrollView.Content = dataGrid;
+                stackLayoutParent.Children.Add(scrollView);
+
+                if (!string.IsNullOrEmpty(description))
+                {
+                    string? id = dataGridComponent.TryGetProperty("id", out JsonElement idElement) ? idElement.GetString() : string.Empty;
+
+                    var labelComponent = new Label
                     {
-                        StyleId = key,
-                        FontSize = (double)FontSizeOption.Medium,
-                        Keyboard = Keyboard.Text,
-                        WidthRequest = 200,
-                        HorizontalOptions = LayoutOptions.Fill,
-                        VerticalOptions = LayoutOptions.Center,
-                        Margin = new Thickness(5, 0)
+                        Text = description,
+                        IsVisible = true,
+                        StyleId = id,
+                        FontSize = (double)FontSizeOption.Description,
+                        FontAttributes = FontAttributes.Bold,
+                        Margin = new Thickness(0, 0, 0, 20)
                     };
-
-                    var cellFrame = new Frame
-                    {
-                        Content = entry,
-                        BorderColor = Colors.Gray,
-                        Padding = 5,
-                        CornerRadius = 0,
-                        Margin = 0,
-                        HasShadow = false
-                    };
-
-                    Grid.SetRow(cellFrame, 1);
-                    Grid.SetColumn(cellFrame, columnIndex);
-                    dataGrid.Children.Add(cellFrame);
-
-                    columnIndex++;
+                    stackLayoutParent.Children.Add(labelComponent);
                 }
             }
-
-            scrollView.Content = dataGrid;
         }
         catch (Exception ex)
         {
             Console.WriteLine("Error in generateDataGrid: " + ex.Message);
         }
 
-        //frame.Content = stackLayout;
-        //scrollView.Content = frame;
-        //scrollView.Content = stackLayout;
-        stacklayoutParent.Children.Add(scrollView);
-
-        return stacklayoutParent;
+        return stackLayoutParent;
     }
 
+    private void AddInputRow(Grid dataGrid, JsonElement gridElements, string dataGridKey, int rowIndex)
+    {
+        int columnIndex = 0;
+        foreach (JsonElement element in gridElements.EnumerateArray())
+        {
+            string? key = element.TryGetProperty("key", out JsonElement keyElement) ? keyElement.GetString() : string.Empty;
+
+            var entry = new TextField
+            {
+                StyleId = $"data[{dataGridKey}][{rowIndex}][{key}]",
+                FontSize = (double)FontSizeOption.Medium,
+                Keyboard = Keyboard.Text,
+                WidthRequest = 200,
+                HorizontalOptions = LayoutOptions.Fill,
+                VerticalOptions = LayoutOptions.Center,
+                Margin = new Thickness(5, 0)
+            };
+
+            var cellFrame = new Frame
+            {
+                Content = entry,
+                BorderColor = Colors.Gray,
+                Padding = 5,
+                CornerRadius = 0,
+                Margin = 0,
+                HasShadow = false
+            };
+
+            Grid.SetRow(cellFrame, rowIndex);
+            Grid.SetColumn(cellFrame, columnIndex);
+            dataGrid.Children.Add(cellFrame);
+
+            columnIndex++;
+        }
+    }
 
     public class SelectOption
     {
