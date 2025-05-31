@@ -482,8 +482,12 @@ public partial class FormTemplateViewModel : ObservableObject
 
     private View generateDataGrid(JsonElement dataGridComponent)
     {
-        
-        StackLayout stacklayoutParent = new StackLayout();
+        StackLayout stacklayoutParent = new StackLayout
+        {
+            HorizontalOptions = LayoutOptions.Fill,
+            VerticalOptions = LayoutOptions.Start,
+            Margin = new Thickness(0, 0, 0, 20)
+        };
 
         ScrollView scrollView = new ScrollView
         {
@@ -491,14 +495,6 @@ public partial class FormTemplateViewModel : ObservableObject
             HorizontalOptions = LayoutOptions.Fill,
             Margin = new Thickness(0, 0, 0, 20)
         };
-
-        Frame frame = new Frame
-        {
-            HasShadow = false,
-            HorizontalOptions = LayoutOptions.Fill
-        };
-
-        StackLayout stackLayout = new StackLayout();
 
         try
         {
@@ -514,6 +510,7 @@ public partial class FormTemplateViewModel : ObservableObject
                 var labelComponent = new Label
                 {
                     Text = description,
+                    IsVisible = true,
                     StyleId = id,
                     FontSize = (double)FontSizeOption.Description,
                     FontAttributes = FontAttributes.Bold,
@@ -523,7 +520,8 @@ public partial class FormTemplateViewModel : ObservableObject
             }
 
             Grid dataGrid = new Grid();
-            dataGrid.ColumnSpacing = 6;
+            dataGrid.ColumnSpacing = 0;
+            dataGrid.RowSpacing = 0;
 
             if (dataGridComponent.TryGetProperty("components", out JsonElement gridElements) &&
                 gridElements.ValueKind == JsonValueKind.Array)
@@ -542,69 +540,94 @@ public partial class FormTemplateViewModel : ObservableObject
 
                 int columnIndex = 0;
 
-                // First row: headers
+                // First row: headers with borders
                 foreach (JsonElement element in gridElements.EnumerateArray())
                 {
                     string? id = element.TryGetProperty("id", out JsonElement idElement) ? idElement.GetString() : string.Empty;
                     string? header = element.TryGetProperty("label", out JsonElement headerElement) ? headerElement.GetString() : string.Empty;
 
-                    var labelComponent = new Label
+                    var cellLabel = new Label
                     {
                         Text = header,
                         StyleId = id,
                         FontSize = (double)FontSizeOption.Description,
                         FontAttributes = FontAttributes.Bold,
-                        Margin = new Thickness(5, 0, 5, 10),
-                        WidthRequest = 200,
-                        HorizontalOptions = LayoutOptions.Center
+                        HorizontalOptions = LayoutOptions.Center,
+                        VerticalOptions = LayoutOptions.Center,
+                        HorizontalTextAlignment = TextAlignment.Center,
+                        VerticalTextAlignment = TextAlignment.Center,
+                        Padding = new Thickness(10)
                     };
 
-                    Grid.SetRow(labelComponent, 0);
-                    Grid.SetColumn(labelComponent, columnIndex);
-                    dataGrid.Children.Add(labelComponent);
+                    var cellFrame = new Frame
+                    {
+                        Content = cellLabel,
+                        BorderColor = Colors.Gray,
+                        Padding = 0,
+                        CornerRadius = 0,
+                        Margin = 0,
+                        HasShadow = false
+                    };
+
+
+                    Grid.SetRow(cellFrame, 0);
+                    Grid.SetColumn(cellFrame, columnIndex);
+                    dataGrid.Children.Add(cellFrame);
 
                     columnIndex++;
                 }
 
                 columnIndex = 0;
 
-                // Second row: input fields
+                // Second row: input fields with borders
                 foreach (JsonElement element in gridElements.EnumerateArray())
                 {
                     string? key = element.TryGetProperty("key", out JsonElement keyElement) ? keyElement.GetString() : string.Empty;
 
-                    var inputComponent = new Entry // Or TextField if using custom
+                    var entry = new Entry
                     {
                         StyleId = key,
                         FontSize = (double)FontSizeOption.Medium,
                         Keyboard = Keyboard.Text,
                         WidthRequest = 200,
-                        Margin = new Thickness(5),
-                        HorizontalOptions = LayoutOptions.Fill
+                        HorizontalOptions = LayoutOptions.Fill,
+                        VerticalOptions = LayoutOptions.Center,
+                        Margin = new Thickness(5, 0)
                     };
 
-                    Grid.SetRow(inputComponent, 1);
-                    Grid.SetColumn(inputComponent, columnIndex);
-                    dataGrid.Children.Add(inputComponent);
+                    var cellFrame = new Frame
+                    {
+                        Content = entry,
+                        BorderColor = Colors.Gray,
+                        Padding = 5,
+                        CornerRadius = 0,
+                        Margin = 0,
+                        HasShadow = false
+                    };
+
+                    Grid.SetRow(cellFrame, 1);
+                    Grid.SetColumn(cellFrame, columnIndex);
+                    dataGrid.Children.Add(cellFrame);
 
                     columnIndex++;
                 }
             }
 
-            stackLayout.Children.Add(dataGrid);
+            scrollView.Content = dataGrid;
         }
         catch (Exception ex)
         {
-            // Consider logging the error or displaying a fallback UI
             Console.WriteLine("Error in generateDataGrid: " + ex.Message);
         }
 
-        frame.Content = stackLayout;
-        scrollView.Content = frame;
+        //frame.Content = stackLayout;
+        //scrollView.Content = frame;
+        //scrollView.Content = stackLayout;
         stacklayoutParent.Children.Add(scrollView);
 
-        return scrollView;
+        return stacklayoutParent;
     }
+
 
     public class SelectOption
     {
