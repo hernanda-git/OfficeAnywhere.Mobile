@@ -3,6 +3,60 @@ using System.Text.Json.Serialization;
 
 namespace OfficeAnywhere.Mobile.Models;
 
+public class PostTask
+{
+    [JsonPropertyName("Title")]
+    public string Title { get; set; }
+
+    [JsonPropertyName("Details")]
+    public string Details { get; set; }
+
+    [JsonPropertyName("EndDate")]
+    public DateTime EndDate { get; set; }
+
+    [JsonPropertyName("TaskStateId")]
+    public int TaskStateId { get; set; }
+
+    [JsonPropertyName("SenderId")]
+    public int SenderId { get; set; }
+
+    [JsonPropertyName("EmployId")]
+    public int EmployId { get; set; }
+
+    [JsonPropertyName("IsRefues")]
+    public bool IsRefues { get; set; }
+
+    [JsonPropertyName("FormOrder")]
+    public FormOrder FormOrder { get; set; }
+
+    [JsonPropertyName("TaskTypeId")]
+    public int TaskTypeId { get; set; }
+
+    [JsonPropertyName("AddedDate")]
+    public DateTime AddedDate { get; set; }
+}
+
+public class FormOrder
+{
+    [JsonPropertyName("Id")]
+    public int Id { get; set; }
+
+    [JsonPropertyName("FormId")]
+    public int FormId { get; set; }
+
+    [JsonPropertyName("UserName")]
+    public string UserName { get; set; }
+
+    [JsonPropertyName("AddedDate")]
+    public DateTime AddedDate { get; set; }
+
+    [JsonPropertyName("FromData")]
+    public string FromData { get; set; }
+
+    [JsonPropertyName("MetaData")]
+    public string MetaData { get; set; }
+}
+
 public class Form
 {
     [JsonPropertyName("$id")]

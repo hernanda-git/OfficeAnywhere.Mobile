@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Windows.Input;
 using UraniumUI.Material.Controls;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace OfficeAnywhere.Mobile.ViewModels;
 
@@ -31,10 +32,13 @@ public partial class FormTemplateViewModel : ObservableObject
     private ObservableCollection<View> dynamicContents = new();
 
     [ObservableProperty]
-    private bool isBusy;
+    private bool isBusy = false;
 
     [ObservableProperty]
     private string? profilePicture;
+
+    [ObservableProperty]
+    private string? buttonText = "Submit";
 
     [ObservableProperty]
     private ObservableCollection<Form> taskType = new();
@@ -109,6 +113,101 @@ public partial class FormTemplateViewModel : ObservableObject
         }
     }
 
+    [RelayCommand]
+    private async Task SubmitAsync()
+    {
+        if (IsBusy) return;
+
+        try
+        {
+            IsBusy = true;
+
+            // Ensure required fields are selected
+            //if (SelectedTaskType == null || SelectedUser == null)
+            //{
+            //    await Shell.Current.DisplayAlert("Error", "Please select a task type and user.", "OK");
+            //    return;
+            //}
+
+            // Collect form data from dynamic components
+            //var formData = new Dictionary<string, object>();
+            //foreach (var component in DynamicContents)
+            //{
+            //    if (!string.IsNullOrEmpty(component.StyleId))
+            //    {
+            //        switch (component)
+            //        {
+            //            case TextField textField:
+            //                formData[component.StyleId] = textField.Text ?? string.Empty;
+            //                break;
+            //            case EditorField editorField:
+            //                formData[component.StyleId] = editorField.Text ?? string.Empty;
+            //                break;
+            //            case PickerField pickerField:
+            //                formData[component.StyleId] = pickerField.SelectedItem?.ToString() ?? string.Empty;
+            //                break;
+            //            case DatePickerField datePickerField:
+            //                formData[component.StyleId] = datePickerField.Date.Value.ToString("yyyy-MM-dd hh:mm a"); // ISO 8601 format
+            //                break;
+            //            case RadioButtonGroupView radioGroup:
+            //                var selectedRadio = radioGroup.Children
+            //                    .OfType<UraniumUI.Material.Controls.RadioButton>()
+            //                    .FirstOrDefault(r => r.IsChecked);
+            //                formData[component.StyleId] = selectedRadio?.Value?.ToString() ?? string.Empty;
+            //                break;
+            //        }
+            //    }
+            //}
+            //formData["submit"] = true;
+
+            //// Create the JSON payload
+            //var payload = new
+            //{
+            //    Title = SelectedTaskType?.Name ?? "طلب تصميم",
+            //    Details = string.Empty,
+            //    EndDate = DateTime.UtcNow.ToString("o"), // Current UTC time in ISO 8601 format
+            //    TaskStateId = 1,
+            //    SenderId = 1, // Hardcoded as per example; adjust based on actual sender
+            //    EmployId = SelectedUser?.Id ?? 2, // Use selected user's ID
+            //    IsRefues = false, // Typo in example, keeping as is
+            //    FormOrder = new
+            //    {
+            //        Id = 0,
+            //        FormId = SelectedTaskType?.Id,
+            //        UserName = SelectedUser?.UserName ?? "AymanOrg",
+            //        AddedDate = DateTime.UtcNow.ToString("o"),
+            //        FromData = JsonSerializer.Serialize(formData), // Serialize form data
+            //        MetaData = string.Empty
+            //    },
+            //    TaskTypeId = SelectedTaskType?.Id,
+            //    AddedDate = DateTime.UtcNow.ToString("o")
+            //};
+
+            // Send the payload to the server (example endpoint)
+            //var content = new StringContent(JsonSerializer.Serialize(payload), System.Text.Encoding.UTF8, "application/json");
+            //var response = await _httpClient.PostAsync("https://your-api-endpoint.com/submit", content); // Replace with actual endpoint
+            //response.EnsureSuccessStatusCode();
+
+            IsBusy = false;
+            await Shell.Current.DisplayAlert("Success", "Form submitted successfully.", "OK");
+            await Shell.Current.GoToAsync("//TaskPage", true);
+        }
+        catch (HttpRequestException ex)
+        {
+            IsBusy = false;
+            await Shell.Current.DisplayAlert("Network Error", "Unable to connect to the server. Please check your internet connection.", "OK");
+        }
+        catch (Exception ex)
+        {
+            IsBusy = false;
+            await Shell.Current.DisplayAlert("Error", $"Submission failed: {ex.Message}", "OK");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
     partial void OnSelectedUserChanged(UserModelV2? value)
     {
         if (value != null)
@@ -124,14 +223,10 @@ public partial class FormTemplateViewModel : ObservableObject
         }
     }
 
-    // Implement the partial method generated by [ObservableProperty]
     partial void OnSelectedTaskTypeChanged(Form? oldValue, Form? newValue)
     {
-        // Custom logic when SelectedTaskType changes
         if (newValue != null)
         {
-            //Console.WriteLine($"Selected Form Changed: {newValue.Name}, Template: {newValue.FormTemplate.Template}");
-
             DynamicContents.Clear();
 
             using JsonDocument document = JsonDocument.Parse(newValue.FormTemplate.Template);
@@ -173,15 +268,7 @@ public partial class FormTemplateViewModel : ObservableObject
 
                 if (type?.ToLower() == "datagrid")
                 {
-                    if (!string.IsNullOrEmpty(description))
-                    {
-                        DynamicContents.Add(CreateLabel(description, id, FontSizeOption.Medium));
-                    }
-
-                    if (component.TryGetProperty("components", out JsonElement dataGridComponents))
-                    {
-                        processComponents(dataGridComponents);
-                    }
+                    DynamicContents.Add(generateDataGrid(component));
                 }
 
                 if (type?.ToLower() == "fieldset")
@@ -194,6 +281,14 @@ public partial class FormTemplateViewModel : ObservableObject
                     if (component.TryGetProperty("components", out JsonElement fieldSetComponents))
                     {
                         processComponents(fieldSetComponents);
+                    }
+                }
+
+                if (type?.ToLower() == "datetime")
+                {
+                    if (!string.IsNullOrEmpty(label))
+                    {
+                        DynamicContents.Add(CreateDatePickerField(label, id));
                     }
                 }
 
@@ -212,7 +307,7 @@ public partial class FormTemplateViewModel : ObservableObject
                     }
                 }
 
-                if(type?.ToLower() == "radio")
+                if (type?.ToLower() == "radio")
                 {
                     if (!string.IsNullOrEmpty(label))
                     {
@@ -222,16 +317,16 @@ public partial class FormTemplateViewModel : ObservableObject
                     if (component.TryGetProperty("values", out JsonElement values) && values.ValueKind == JsonValueKind.Array)
                     {
                         List<RadioButtonOption> options = [];
-                       
+
                         foreach (JsonElement row in values.EnumerateArray())
                         {
                             row.TryGetProperty("label", out JsonElement labElement);
                             row.TryGetProperty("value", out JsonElement valueElement);
                             row.TryGetProperty("shortcut", out JsonElement shortcutElement);
 
-                            string labelString =  labElement.GetString() ?? string.Empty;
-                            string valueString =  valueElement.GetString() ?? string.Empty;
-                            string shortcutString =  shortcutElement.GetString() ?? string.Empty;
+                            string labelString = labElement.GetString() ?? string.Empty;
+                            string valueString = valueElement.GetString() ?? string.Empty;
+                            string shortcutString = shortcutElement.GetString() ?? string.Empty;
 
                             options.Add(new RadioButtonOption
                             {
@@ -326,18 +421,14 @@ public partial class FormTemplateViewModel : ObservableObject
                         }
                     }
 
-                    var picker = CreatePickerField(label, options.Select(o => o.Display), options.FirstOrDefault()?.Display);
+                    var picker = CreatePickerField(label, id, options.Select(o => o.Display), options.FirstOrDefault()?.Display);
                     picker.StyleId = key;
                     DynamicContents.Add(picker);
                 }
 
-                if (type?.ToLower() == "button")
+                if (type?.ToLower() == "button" && key?.ToLower() == "submit")
                 {
-                    if (!string.IsNullOrEmpty(label))
-                    {
-                        DynamicContents.Add(CreateLabel(label, id, FontSizeOption.Medium));
-                    }
-
+                    ButtonText = label ?? "Submit";
                 }
 
                 if (type?.ToLower() == "table")
@@ -359,7 +450,7 @@ public partial class FormTemplateViewModel : ObservableObject
                     }
                 }
 
-                if(component.TryGetProperty("table", out JsonElement tableElement))
+                if (component.TryGetProperty("table", out JsonElement tableElement))
                 {
                     if (component.TryGetProperty("rows", out JsonElement rowsElement) && component.TryGetProperty("numRows", out JsonElement numRowsElement))
                     {
@@ -377,16 +468,142 @@ public partial class FormTemplateViewModel : ObservableObject
                         }
                     }
                 }
-                if (component.TryGetProperty("components", out JsonElement subComponents) && subComponents.ValueKind == JsonValueKind.Array)
-                {
-                    processComponents(subComponents);
-                }
+                //if (component.TryGetProperty("components", out JsonElement subComponents) && subComponents.ValueKind == JsonValueKind.Array)
+                //{
+                //    processComponents(subComponents);
+                //}
             }
         }
         catch (Exception ex)
         {
 
         }
+    }
+
+    private View generateDataGrid(JsonElement dataGridComponent)
+    {
+        
+        StackLayout stacklayoutParent = new StackLayout();
+
+        ScrollView scrollView = new ScrollView
+        {
+            Orientation = ScrollOrientation.Horizontal,
+            HorizontalOptions = LayoutOptions.Fill,
+            Margin = new Thickness(0, 0, 0, 20)
+        };
+
+        Frame frame = new Frame
+        {
+            HasShadow = false,
+            HorizontalOptions = LayoutOptions.Fill
+        };
+
+        StackLayout stackLayout = new StackLayout();
+
+        try
+        {
+            string? label = dataGridComponent.TryGetProperty("label", out JsonElement labelElement) ? labelElement.GetString() : string.Empty;
+            string? legend = dataGridComponent.TryGetProperty("legend", out JsonElement legendElement) ? legendElement.GetString() : string.Empty;
+            string? description = dataGridComponent.TryGetProperty("description", out JsonElement descElement) ? descElement.GetString() : string.Empty;
+            string? content = dataGridComponent.TryGetProperty("content", out JsonElement contentElement) ? contentElement.GetString() : string.Empty;
+
+            if (!string.IsNullOrEmpty(description))
+            {
+                string? id = dataGridComponent.TryGetProperty("id", out JsonElement idElement) ? idElement.GetString() : string.Empty;
+
+                var labelComponent = new Label
+                {
+                    Text = description,
+                    StyleId = id,
+                    FontSize = (double)FontSizeOption.Description,
+                    FontAttributes = FontAttributes.Bold,
+                    Margin = new Thickness(0, 0, 0, 20)
+                };
+                stacklayoutParent.Children.Add(labelComponent);
+            }
+
+            Grid dataGrid = new Grid();
+            dataGrid.ColumnSpacing = 6;
+
+            if (dataGridComponent.TryGetProperty("components", out JsonElement gridElements) &&
+                gridElements.ValueKind == JsonValueKind.Array)
+            {
+                int columnCount = gridElements.GetArrayLength();
+
+                // Define two rows: one for labels, one for inputs
+                dataGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                dataGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+
+                // Define one column per component
+                for (int i = 0; i < columnCount; i++)
+                {
+                    dataGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                }
+
+                int columnIndex = 0;
+
+                // First row: headers
+                foreach (JsonElement element in gridElements.EnumerateArray())
+                {
+                    string? id = element.TryGetProperty("id", out JsonElement idElement) ? idElement.GetString() : string.Empty;
+                    string? header = element.TryGetProperty("label", out JsonElement headerElement) ? headerElement.GetString() : string.Empty;
+
+                    var labelComponent = new Label
+                    {
+                        Text = header,
+                        StyleId = id,
+                        FontSize = (double)FontSizeOption.Description,
+                        FontAttributes = FontAttributes.Bold,
+                        Margin = new Thickness(5, 0, 5, 10),
+                        WidthRequest = 200,
+                        HorizontalOptions = LayoutOptions.Center
+                    };
+
+                    Grid.SetRow(labelComponent, 0);
+                    Grid.SetColumn(labelComponent, columnIndex);
+                    dataGrid.Children.Add(labelComponent);
+
+                    columnIndex++;
+                }
+
+                columnIndex = 0;
+
+                // Second row: input fields
+                foreach (JsonElement element in gridElements.EnumerateArray())
+                {
+                    string? key = element.TryGetProperty("key", out JsonElement keyElement) ? keyElement.GetString() : string.Empty;
+
+                    var inputComponent = new Entry // Or TextField if using custom
+                    {
+                        StyleId = key,
+                        FontSize = (double)FontSizeOption.Medium,
+                        Keyboard = Keyboard.Text,
+                        WidthRequest = 200,
+                        Margin = new Thickness(5),
+                        HorizontalOptions = LayoutOptions.Fill
+                    };
+
+                    Grid.SetRow(inputComponent, 1);
+                    Grid.SetColumn(inputComponent, columnIndex);
+                    dataGrid.Children.Add(inputComponent);
+
+                    columnIndex++;
+                }
+            }
+
+            stackLayout.Children.Add(dataGrid);
+        }
+        catch (Exception ex)
+        {
+            // Consider logging the error or displaying a fallback UI
+            Console.WriteLine("Error in generateDataGrid: " + ex.Message);
+        }
+
+        frame.Content = stackLayout;
+        scrollView.Content = frame;
+        stacklayoutParent.Children.Add(scrollView);
+
+        return scrollView;
     }
 
     public class SelectOption
@@ -448,11 +665,12 @@ public partial class FormTemplateViewModel : ObservableObject
     }
 
     // Function to create a PickerField
-    private PickerField CreatePickerField(string title, IEnumerable<string> items, string defaultSelection = null, Thickness? margin = null)
+    private PickerField CreatePickerField(string title, string id, IEnumerable<string> items, string defaultSelection = null, Thickness? margin = null)
     {
         return new PickerField
         {
             Title = title,
+            StyleId = id,
             ItemsSource = items.ToList(),
             SelectedItem = defaultSelection ?? items.FirstOrDefault(), // Default to first item if none specified
             Margin = margin ?? new Thickness(0, 0, 0, 20)
@@ -460,12 +678,14 @@ public partial class FormTemplateViewModel : ObservableObject
     }
 
     // Function to create a DatePickerField
-    private DatePickerField CreateDatePickerField(string title, DateTime? defaultDate = null, Thickness? margin = null)
+    private DatePickerField CreateDatePickerField(string title, string id, DateTime? defaultDate = null, Thickness? margin = null)
     {
         return new DatePickerField
         {
             Title = title,
-            Date = defaultDate ?? DateTime.Now, // Default to current date if none specified
+            StyleId = id,
+            FontSize = (double)FontSizeOption.Medium,
+            Date = defaultDate ?? DateTime.Now,
             Margin = margin ?? new Thickness(0, 0, 0, 20)
         };
     }

@@ -104,6 +104,17 @@
                         HorizontalOptions="Fill"
                         VerticalOptions="Fill" />
 
+                    <Button
+                        Margin="0,0,0,10"
+                        BackgroundColor="{StaticResource PrimaryDark}"
+                        Command="{Binding SubmitCommand}"
+                        CornerRadius="15"
+                        FontAttributes="Bold"
+                        IsEnabled="True"
+                        IsVisible="{Binding ButtonText, Converter={StaticResource StringBoolConverter}}"
+                        Text="{Binding ButtonText}"
+                        TextColor="White" />
+
                 </VerticalStackLayout>
             </ScrollView>
         </Grid>
