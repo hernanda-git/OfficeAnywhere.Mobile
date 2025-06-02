@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="OfficeAnywhere.Mobile.Views.TaskDetailPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:OfficeAnywhere.Mobile.Converters"
+    xmlns:d="http://schemas.microsoft.com/dotnet/2021/maui/design"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+    xmlns:local="clr-namespace:OfficeAnywhere.Mobile.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    FlowDirection="RightToLeft"
+    Shell.NavBarIsVisible="False"
+    mc:Ignorable="d">
+    <ContentPage.Behaviors>
+        <toolkit:StatusBarBehavior StatusBarColor="{StaticResource White}" StatusBarStyle="Default" />
+    </ContentPage.Behaviors>
+    <ContentPage.Resources>
+        <converters:ImageUrlConverter x:Key="ImageUrlConverter" />
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid ColumnDefinitions="*" RowDefinitions="Auto,*">
+            <!--  Header  -->
+            <!--
+            <Grid
+                Grid.Row="0"
+                Padding="15,10,15,10"
+                BackgroundColor="{StaticResource White}"
+                ColumnDefinitions="1.5*,7*,1.5*">
+                <ImageButton
+                    Grid.Column="0"
+                    Padding="10"
+                    BackgroundColor="{StaticResource PrimaryDark}"
+                    Command="{Binding BackCommand}"
+                    CornerRadius="8"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Center">
+                    <ImageButton.Source>
+                        <FontImageSource
+                            FontFamily="FASolid"
+                            Glyph=""
+                            Size="22"
+                            Color="{StaticResource White}" />
+                    </ImageButton.Source>
+                    <ImageButton.Behaviors>
+                        <toolkit:TouchBehavior PressedScale="1.12" />
+                    </ImageButton.Behaviors>
+                </ImageButton>
+                <Label
+                    Grid.Column="1"
+                    FontAttributes="Bold"
+                    FontSize="Large"
+                    HorizontalOptions="Center"
+                    Text="تفاصيل المهمة"
+                    TextColor="{StaticResource PrimaryDarkText}"
+                    VerticalOptions="Center" />
+            </Grid>
+
+            -->
+            <!--  Content  -->
+            <!--
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout Padding="15,10,15,15">
+            -->
+            <!--  Task Title and Type  -->
+            <!--
+                    <Frame
+                        Margin="0,0,0,20"
+                        BackgroundColor="{StaticResource TaskBackground}"
+                        BorderColor="Transparent"
+                        HasShadow="False">
+                        <Grid Padding="10" RowDefinitions="*,*">
+                            <Label
+                                Grid.Row="0"
+                                FontAttributes="Bold"
+                                FontSize="24"
+                                HorizontalTextAlignment="End"
+                                Text="{Binding SelectedTask.Title}"
+                                TextColor="{StaticResource PrimaryDark}" />
+                            <Label
+                                Grid.Row="1"
+                                FontSize="18"
+                                HorizontalTextAlignment="End"
+                                Text="{Binding SelectedTask.TaskTypeName}"
+                                TextColor="{StaticResource PrimaryDark}" />
+                        </Grid>
+                    </Frame>
+
+            -->
+            <!--  Date and Time  -->
+            <!--
+                    <Frame
+                        Margin="0,0,0,20"
+                        BackgroundColor="{StaticResource TaskBackground}"
+                        BorderColor="Transparent"
+                        HasShadow="False">
+                        <Grid
+                            Padding="10"
+                            ColumnDefinitions="*,*"
+                            RowDefinitions="*,*">
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                FontSize="16"
+                                Text="تاريخ التحديث"
+                                TextColor="{StaticResource PrimaryDarkText}" />
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                FontSize="16"
+                                HorizontalTextAlignment="End"
+                                Text="{Binding SelectedTask.LastUpdatedDate, StringFormat='{0:MMMM dd, yyyy}'}"
+                                TextColor="{StaticResource PrimaryDark}" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                FontSize="16"
+                                Text="الوقت"
+                                TextColor="{StaticResource PrimaryDarkText}" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                FontSize="16"
+                                HorizontalTextAlignment="End"
+                                Text="{Binding SelectedTask.LastUpdatedDate, StringFormat='{0:HH:mm}'}"
+                                TextColor="{StaticResource PrimaryDark}" />
+                        </Grid>
+                    </Frame>
+
+            -->
+            <!--  Sender and Employee  -->
+            <!--
+                    <Frame
+                        Margin="0,0,0,20"
+                        BackgroundColor="{StaticResource TaskBackground}"
+                        BorderColor="Transparent"
+                        HasShadow="False">
+                        <Grid Padding="10" RowDefinitions="*,*">
+                            <HorizontalStackLayout Grid.Row="0" HorizontalOptions="Start">
+                                <Label
+                                    FontSize="16"
+                                    Text="المرسل"
+                                    TextColor="{StaticResource PrimaryDarkText}"
+                                    VerticalOptions="Center" />
+                                <Frame
+                                    Margin="10,0,0,0"
+                                    Padding="5"
+                                    BackgroundColor="{StaticResource PrimaryDark}"
+                                    BorderColor="{StaticResource PrimaryDark}"
+                                    CornerRadius="100"
+                                    HasShadow="False"
+                                    HeightRequest="45"
+                                    WidthRequest="45">
+                                    <ffimageloading:CachedImage
+                                        Aspect="AspectFill"
+                                        HeightRequest="40"
+                                        Source="{Binding SelectedTask.SenderUserImage, Converter={StaticResource ImageUrlConverter}}"
+                                        WidthRequest="40">
+                                        <ffimageloading:CachedImage.Clip>
+                                            <EllipseGeometry
+                                                Center="20,20"
+                                                RadiusX="20"
+                                                RadiusY="20" />
+                                        </ffimageloading:CachedImage.Clip>
+                                    </ffimageloading:CachedImage>
+                                </Frame>
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout
+                                Grid.Row="1"
+                                HorizontalOptions="Start"
+                                IsVisible="{Binding SelectedTask.NotSameImage}">
+                                <Label
+                                    FontSize="16"
+                                    Text="الموظف"
+                                    TextColor="{StaticResource PrimaryDarkText}"
+                                    VerticalOptions="Center" />
+                                <Frame
+                                    Margin="10,0,0,0"
+                                    Padding="5"
+                                    BackgroundColor="{StaticResource PrimaryDark}"
+                                    BorderColor="{StaticResource PrimaryDark}"
+                                    CornerRadius="100"
+                                    HasShadow="False"
+                                    HeightRequest="45"
+                                    WidthRequest="45">
+                                    <ffimageloading:CachedImage
+                                        Aspect="AspectFill"
+                                        HeightRequest="40"
+                                        Source="{Binding SelectedTask.EmployUserImage, Converter={StaticResource ImageUrlConverter}}"
+                                        WidthRequest="40">
+                                        <ffimageloading:CachedImage.Clip>
+                                            <EllipseGeometry
+                                                Center="20,20"
+                                                RadiusX="20"
+                                                RadiusY="20" />
+                                        </ffimageloading:CachedImage.Clip>
+                                    </ffimageloading:CachedImage>
+                                </Frame>
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Frame>
+
+            -->
+            <!--  Message Count  -->
+            <!--
+                    <Frame
+                        Margin="0,0,0,20"
+                        BackgroundColor="{StaticResource TaskBackground}"
+                        BorderColor="Transparent"
+                        HasShadow="False">
+                        <HorizontalStackLayout Padding="10" HorizontalOptions="End">
+                            <Label
+                                FontSize="16"
+                                Text="عدد الرسائل"
+                                TextColor="{StaticResource PrimaryDarkText}"
+                                VerticalOptions="Center" />
+                            <Frame
+                                Margin="10,0,0,0"
+                                Padding="7"
+                                BackgroundColor="White"
+                                BorderColor="Transparent"
+                                CornerRadius="10"
+                                HasShadow="False"
+                                VerticalOptions="Center">
+                                <Label
+                                    FontFamily="FARegular"
+                                    FontSize="22"
+                                    Text=""
+                                    TextColor="{StaticResource PrimaryDark}" />
+                            </Frame>
+                            <Label
+                                FontSize="16"
+                                Text="{Binding SelectedTask.MessageCount}"
+                                TextColor="{StaticResource PrimaryDark}"
+                                VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Frame>
+
+            -->
+            <!--  Description  -->
+            <!--
+                    <Frame
+                        Margin="0,0,0,20"
+                        BackgroundColor="{StaticResource TaskBackground}"
+                        BorderColor="Transparent"
+                        HasShadow="False">
+                        <VerticalStackLayout Padding="10">
+                            <Label
+                                FontSize="16"
+                                Text="الوصف"
+                                TextColor="{StaticResource PrimaryDarkText}" />
+                            <Label
+                                FontSize="16"
+                                LineBreakMode="WordWrap"
+                                Text="{Binding SelectedTask.Description}"
+                                TextColor="{StaticResource PrimaryDark}" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </VerticalStackLayout>
+            </ScrollView>-->
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

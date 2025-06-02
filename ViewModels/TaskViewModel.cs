@@ -123,6 +123,18 @@ public partial class TaskViewModel : ObservableObject
         }
     }
 
+    [RelayCommand]
+    public async Task TaskSelectedAsync(TaskCard selectedTask)
+    {
+        if (selectedTask != null)
+        {
+            await Shell.Current.GoToAsync("TaskDetailPage", new Dictionary<string, object>
+                {
+                    { "TaskCard", selectedTask }
+                });
+        }
+    }
+
     private async Task AddTask()
     {
         await Shell.Current.GoToAsync($"//FormTemplate", true);

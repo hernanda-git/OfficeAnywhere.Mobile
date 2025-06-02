@@ -25,6 +25,11 @@
         ContentTemplate="{DataTemplate views:FormTemplate}"
         Route="FormTemplate" />
 
+    <ShellContent
+        Title="TaskDetailPage"
+        ContentTemplate="{DataTemplate views:TaskDetailPage}"
+        Route="TaskDetailPage" />
+
     <TabBar>
         <ShellContent
             Title="البروفايل"

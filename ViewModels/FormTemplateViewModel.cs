@@ -23,6 +23,12 @@ public class DynamicField
     public List<string> Options { get; set; } = new(); // For Picker fields
 }
 
+public class PickerItem
+{
+    public string Key { get; set; }
+    public string Value { get; set; }
+}
+
 public partial class FormTemplateViewModel : ObservableObject
 {
     private readonly FormTemplateService _formTemplateService;
@@ -906,6 +912,104 @@ public partial class FormTemplateViewModel : ObservableObject
         return stackLayoutParent;
     }
 
+    private View GenerateTextField(string styleId, string title = "", FontSizeOption fontSize = FontSizeOption.Medium,
+                                LayoutOptions? horizontalOptions = null, LayoutOptions? verticalOptions = null,
+                                int widthRequest = 0)
+    {
+        var entry = new TextField
+        {
+            Title = title,
+            StyleId = styleId,
+            FontSize = (double)fontSize,
+            Keyboard = Keyboard.Text,
+            HorizontalOptions = horizontalOptions ?? LayoutOptions.Start,
+            VerticalOptions = verticalOptions ?? LayoutOptions.Center,
+            Margin = new Thickness(5, 0)
+        };
+
+        if (widthRequest > 0)
+        {
+            entry.WidthRequest = widthRequest;
+        }
+
+        return entry;
+    }
+
+    private View GenerateDatePickerField(string styleId, string title = "", FontSizeOption fontSize = FontSizeOption.Medium,
+                                LayoutOptions? horizontalOptions = null, LayoutOptions? verticalOptions = null,
+                                int widthRequest = 0)
+    {
+        var datePicker = new DatePickerField
+        {
+            Title = title,
+            StyleId = styleId,
+            FontSize = (double)fontSize,
+            HorizontalOptions = horizontalOptions ?? LayoutOptions.Start,
+            VerticalOptions = verticalOptions ?? LayoutOptions.Center,
+            Margin = new Thickness(5, 0)
+        };
+
+        if (widthRequest > 0)
+        {
+            datePicker.WidthRequest = widthRequest;
+        }
+
+        return datePicker;
+    }
+
+    private View GenerateEditorField(string styleId, string title = "", FontSizeOption fontSize = FontSizeOption.Medium,
+                                LayoutOptions? horizontalOptions = null, LayoutOptions? verticalOptions = null,
+                                int widthRequest = 0)
+    {
+        var entry = new EditorField
+        {
+            Title = title,
+            StyleId = styleId,
+            FontSize = (double)fontSize,
+            Keyboard = Keyboard.Text,
+            HorizontalOptions = horizontalOptions ?? LayoutOptions.Start,
+            VerticalOptions = verticalOptions ?? LayoutOptions.Center,
+            Margin = new Thickness(5, 0)
+        };
+
+        if (widthRequest > 0)
+        {
+            entry.WidthRequest = widthRequest;
+        }
+
+        return entry;
+    }
+
+    private View GeneratePickerField(string styleId, string title = "", List<PickerItem> itemSource = null,
+                                   string display = "Value",
+                                   FontSizeOption fontSize = FontSizeOption.Medium,
+                                   LayoutOptions? horizontalOptions = null, LayoutOptions? verticalOptions = null,
+                                   int widthRequest = 0)
+    {
+        var picker = new PickerField
+        {
+            Title = title,
+            StyleId = styleId,
+            FontSize = (double)fontSize,
+            HorizontalOptions = horizontalOptions ?? LayoutOptions.Start,
+            VerticalOptions = verticalOptions ?? LayoutOptions.Center,
+            Margin = new Thickness(5, 0)
+        };
+
+        if (itemSource != null)
+        {
+            picker.ItemsSource = itemSource;
+            picker.ItemDisplayBinding = new Binding(display);
+        }
+
+        if (widthRequest > 0)
+        {
+            picker.WidthRequest = widthRequest;
+        }
+
+        return picker;
+    }
+
     private void AddInputRow(Grid dataGrid, JsonElement gridElements, string dataGridKey, int rowIndex)
     {
         int columnIndex = 0;
@@ -913,16 +1017,12 @@ public partial class FormTemplateViewModel : ObservableObject
         {
             string? key = element.TryGetProperty("key", out JsonElement keyElement) ? keyElement.GetString() : string.Empty;
 
-            var entry = new TextField
-            {
-                StyleId = $"data[{dataGridKey}][{rowIndex}][{key}]",
-                FontSize = (double)FontSizeOption.Medium,
-                Keyboard = Keyboard.Text,
-                WidthRequest = 200,
-                HorizontalOptions = LayoutOptions.Fill,
-                VerticalOptions = LayoutOptions.Center,
-                Margin = new Thickness(5, 0)
-            };
+            var entry = GenerateTextField(
+                styleId: $"data[{dataGridKey}][{rowIndex}][{key}]", 
+                fontSize: FontSizeOption.Medium,
+                horizontalOptions: LayoutOptions.Fill, 
+                verticalOptions: LayoutOptions.Center, 
+                widthRequest: 200);
 
             var cellFrame = new Frame
             {
@@ -961,18 +1061,18 @@ public partial class FormTemplateViewModel : ObservableObject
     }
 
     // Function to create a Button
-    private Button CreateButton(string text, string id, InputType? inputType = InputType.Text, Thickness? margin = null)
-    {
-        return new Button
-        {
-            Text = text,
-            StyleId = id,
-            FontAttributes = FontAttributes.Bold,
-            HeightRequest = 45,
-            FontSize = (double)FontSizeOption.Medium,
-            Margin = margin ?? new Thickness(0, 0, 0, 20)
-        };
-    }
+    //private Button CreateButton(string text, string id, InputType? inputType = InputType.Text, Thickness? margin = null)
+    //{
+    //    return new Button
+    //    {
+    //        Text = text,
+    //        StyleId = id,
+    //        FontAttributes = FontAttributes.Bold,
+    //        HeightRequest = 45,
+    //        FontSize = (double)FontSizeOption.Medium,
+    //        Margin = margin ?? new Thickness(0, 0, 0, 20)
+    //    };
+    //}
 
     // Function to create a TextField
     private TextField CreateTextField(string text, string id, InputType? inputType = InputType.Text, Thickness? margin = null)

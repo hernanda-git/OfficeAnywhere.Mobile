@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<ContentPage  
-   x:Class="OfficeAnywhere.Mobile.Views.TaskPage"  
-   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"  
-   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"  
-   xmlns:d="http://schemas.microsoft.com/dotnet/2021/maui/design"  
-   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"  
-   xmlns:local="clr-namespace:OfficeAnywhere.Mobile.Views"  
-   xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"  
-   xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
-   xmlns:converters="clr-namespace:OfficeAnywhere.Mobile.Converters"
-   Shell.NavBarIsVisible="False"  
-   mc:Ignorable="d">
+<ContentPage
+    x:Class="OfficeAnywhere.Mobile.Views.TaskPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:OfficeAnywhere.Mobile.Converters"
+    xmlns:d="http://schemas.microsoft.com/dotnet/2021/maui/design"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+    xmlns:local="clr-namespace:OfficeAnywhere.Mobile.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    Shell.NavBarIsVisible="False"
+    mc:Ignorable="d">
     <ContentPage.Behaviors>
         <toolkit:StatusBarBehavior StatusBarColor="{StaticResource White}" StatusBarStyle="Default" />
     </ContentPage.Behaviors>
@@ -19,132 +19,219 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <Grid ColumnDefinitions="*" RowDefinitions="*">
-            <ScrollView Grid.Column="0" Grid.Row="0">
-                <VerticalStackLayout Padding="15,0,15,15" Grid.Row="0" Grid.Column="0">
-                    <Grid ColumnDefinitions="1.5*,7*,1.5*" VerticalOptions="Start" Margin="0,0,0,20">
-                        <!--<ImageButton Grid.Column="0" Source="sample_profile_pic.jpg" HeightRequest="46" WidthRequest="46" Aspect="Fill" VerticalOptions="Center" HorizontalOptions="Start" Padding="5" BorderColor="{StaticResource PrimaryDark}" BorderWidth="5">
-                            <ImageButton.Behaviors>
-                                <toolkit:TouchBehavior PressedScale="1.12"/>
-                            </ImageButton.Behaviors>
-                        </ImageButton>-->
-                        <ffimageloading:CachedImageView Grid.Column="0" Source="{Binding ProfilePicture}" Stroke="{StaticResource PrimaryDark}" StrokeThickness="5"></ffimageloading:CachedImageView>
-                        <Image Grid.Column="1" Margin="10,0,0,0" VerticalOptions="Center" Source="logo_bg_white.png" WidthRequest="132"/>
-                        <ImageButton Grid.Column="2" CornerRadius="8" BackgroundColor="{StaticResource PrimaryDark}" Padding="10" VerticalOptions="Center" HorizontalOptions="End">
+            <ScrollView Grid.Row="0" Grid.Column="0">
+                <VerticalStackLayout
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Padding="15,0,15,15">
+                    <Grid
+                        Margin="0,0,0,20"
+                        ColumnDefinitions="1.5*,7*,1.5*"
+                        VerticalOptions="Start">
+                        <ffimageloading:CachedImageView
+                            Grid.Column="0"
+                            Source="{Binding ProfilePicture}"
+                            Stroke="{StaticResource PrimaryDark}"
+                            StrokeThickness="5" />
+                        <Image
+                            Grid.Column="1"
+                            Margin="10,0,0,0"
+                            Source="logo_bg_white.png"
+                            VerticalOptions="Center"
+                            WidthRequest="132" />
+                        <ImageButton
+                            Grid.Column="2"
+                            Padding="10"
+                            BackgroundColor="{StaticResource PrimaryDark}"
+                            CornerRadius="8"
+                            HorizontalOptions="End"
+                            VerticalOptions="Center">
                             <ImageButton.Source>
-                                <FontImageSource FontFamily="FASolid" Glyph="&#xf0c9;" Color="{StaticResource White}" Size="22"/>
+                                <FontImageSource
+                                    FontFamily="FASolid"
+                                    Glyph=""
+                                    Size="22"
+                                    Color="{StaticResource White}" />
                             </ImageButton.Source>
                             <ImageButton.Behaviors>
-                                <toolkit:TouchBehavior PressedScale="1.12"/>
+                                <toolkit:TouchBehavior PressedScale="1.12" />
                             </ImageButton.Behaviors>
                         </ImageButton>
                     </Grid>
-                    <Label Text="المهام" FontSize="Large" TextColor="{StaticResource PrimaryDarkText}" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,20"/>
+                    <Label
+                        Margin="0,0,0,20"
+                        FontAttributes="Bold"
+                        FontSize="Large"
+                        HorizontalOptions="Center"
+                        Text="المهام"
+                        TextColor="{StaticResource PrimaryDarkText}" />
 
-                    <Grid ColumnDefinitions="3*,7*" ColumnSpacing="10" Margin="0,0,0,20">
-                        <Button Text="Search" CornerRadius="10" Grid.Row="0" Grid.Column="0" HeightRequest="43.5" BackgroundColor="{StaticResource PrimaryDark}">
+                    <Grid
+                        Margin="0,0,0,20"
+                        ColumnDefinitions="3*,7*"
+                        ColumnSpacing="10">
+                        <Button
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            BackgroundColor="{StaticResource PrimaryDark}"
+                            CornerRadius="10"
+                            HeightRequest="43.5"
+                            Text="Search">
                             <Button.ImageSource>
-                                <FontImageSource FontFamily="FASolid" Glyph="&#xf002;" Color="{StaticResource White}" Size="22"/>
+                                <FontImageSource
+                                    FontFamily="FASolid"
+                                    Glyph=""
+                                    Size="22"
+                                    Color="{StaticResource White}" />
                             </Button.ImageSource>
                         </Button>
 
-                        <Frame Grid.Column="1" CornerRadius="15" BackgroundColor="{StaticResource SegmentedBackground}" Padding="2" BorderColor="Transparent">
+                        <Frame
+                            Grid.Column="1"
+                            Padding="2"
+                            BackgroundColor="{StaticResource SegmentedBackground}"
+                            BorderColor="Transparent"
+                            CornerRadius="15">
                             <Grid ColumnDefinitions="*,*" ColumnSpacing="0">
-                                <Button Grid.Column="0" Text="تاريخ البدء" BackgroundColor="Transparent" TextColor="{StaticResource White}" FontAttributes="Bold" CornerRadius="15" Margin="0" />
-                                <Button Grid.Column="1" Text="تاريخ الانتهاء" BackgroundColor="{StaticResource PrimaryDark}" TextColor="{StaticResource White}" FontAttributes="Bold" CornerRadius="15" Margin="0" />
+                                <Button
+                                    Grid.Column="0"
+                                    Margin="0"
+                                    BackgroundColor="Transparent"
+                                    CornerRadius="15"
+                                    FontAttributes="Bold"
+                                    Text="تاريخ البدء"
+                                    TextColor="{StaticResource White}" />
+                                <Button
+                                    Grid.Column="1"
+                                    Margin="0"
+                                    BackgroundColor="{StaticResource PrimaryDark}"
+                                    CornerRadius="15"
+                                    FontAttributes="Bold"
+                                    Text="تاريخ الانتهاء"
+                                    TextColor="{StaticResource White}" />
                             </Grid>
                         </Frame>
                     </Grid>
 
-                    <CollectionView ItemsSource="{Binding TaskCardList}"
-                Margin="10"
-                SelectionMode="None">
+                    <CollectionView
+                        Margin="10"
+                        ItemsSource="{Binding TaskCardList}"
+                        SelectionChangedCommand="{Binding TaskSelectedCommand}"
+                        SelectionMode="Single">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Frame BorderColor="Transparent" 
-                   HasShadow="False" 
-                   BackgroundColor="{StaticResource TaskBackground}" 
-                   Margin="0,0,0,20">
+                                <Frame
+                                    Margin="0,0,0,20"
+                                    BackgroundColor="{StaticResource TaskBackground}"
+                                    BorderColor="Transparent"
+                                    HasShadow="False">
                                     <Grid RowDefinitions="*,*,*">
                                         <Grid Grid.Row="0" ColumnDefinitions="*,*">
-                                            <Label Text="{Binding LastUpdatedDate, StringFormat='{0:MMMM dd}'}" 
-                               Grid.Column="0" 
-                               FontSize="16" 
-                               TextColor="{StaticResource PrimaryDark}" 
-                               VerticalOptions="Center"/>
-                                            <Label Text="{Binding Title}" 
-                               Grid.Column="1" 
-                               HorizontalTextAlignment="End" 
-                               FontSize="22" 
-                               FontAttributes="Bold" 
-                               TextColor="{StaticResource PrimaryDark}" 
-                               VerticalOptions="Center"/>
+                                            <Label
+                                                Grid.Column="0"
+                                                FontSize="16"
+                                                Text="{Binding LastUpdatedDate, StringFormat='{0:MMMM dd}'}"
+                                                TextColor="{StaticResource PrimaryDark}"
+                                                VerticalOptions="Center" />
+                                            <Label
+                                                Grid.Column="1"
+                                                FontAttributes="Bold"
+                                                FontSize="22"
+                                                HorizontalTextAlignment="End"
+                                                Text="{Binding Title}"
+                                                TextColor="{StaticResource PrimaryDark}"
+                                                VerticalOptions="Center" />
                                         </Grid>
                                         <Grid Grid.Row="1" ColumnDefinitions="*,*">
-                                            <Label Text="{Binding LastUpdatedDate, StringFormat='{0:HH:mm}'}" 
-                               Grid.Column="0" 
-                               TextColor="{StaticResource PrimaryDark}" 
-                               FontSize="16" 
-                               VerticalOptions="Center"/>
-                                            <Label Text="{Binding TaskTypeName}" 
-                               Grid.Column="1" 
-                               HorizontalTextAlignment="End" 
-                               FontSize="22" 
-                               TextColor="{StaticResource PrimaryDark}" 
-                               VerticalOptions="Center"/>
+                                            <Label
+                                                Grid.Column="0"
+                                                FontSize="16"
+                                                Text="{Binding LastUpdatedDate, StringFormat='{0:HH:mm}'}"
+                                                TextColor="{StaticResource PrimaryDark}"
+                                                VerticalOptions="Center" />
+                                            <Label
+                                                Grid.Column="1"
+                                                FontSize="22"
+                                                HorizontalTextAlignment="End"
+                                                Text="{Binding TaskTypeName}"
+                                                TextColor="{StaticResource PrimaryDark}"
+                                                VerticalOptions="Center" />
                                         </Grid>
-                                        <Grid Grid.Row="2" ColumnDefinitions="*,*" Margin="0,20,0,0">
+                                        <Grid
+                                            Grid.Row="2"
+                                            Margin="0,20,0,0"
+                                            ColumnDefinitions="*,*">
                                             <HorizontalStackLayout Grid.Column="0" HorizontalOptions="Start">
-                                                <Frame CornerRadius="100" 
-                                   BorderColor="{StaticResource PrimaryDark}" 
-                                   BackgroundColor="{StaticResource PrimaryDark}" 
-                                   HorizontalOptions="Start" 
-                                   VerticalOptions="Start" 
-                                   WidthRequest="45" 
-                                   HeightRequest="45" 
-                                   Padding="5" 
-                                   Margin="0,0,-15,0"
-                                   HasShadow="False">
-                                                    <ffimageloading:CachedImage Source="{Binding SenderUserImage, Converter={StaticResource ImageUrlConverter}}"
-                                       Aspect="AspectFill" 
-                                       HeightRequest="40" 
-                                       WidthRequest="40">
+                                                <Frame
+                                                    Margin="0,0,-15,0"
+                                                    Padding="5"
+                                                    BackgroundColor="{StaticResource PrimaryDark}"
+                                                    BorderColor="{StaticResource PrimaryDark}"
+                                                    CornerRadius="100"
+                                                    HasShadow="False"
+                                                    HeightRequest="45"
+                                                    HorizontalOptions="Start"
+                                                    VerticalOptions="Start"
+                                                    WidthRequest="45">
+                                                    <ffimageloading:CachedImage
+                                                        Aspect="AspectFill"
+                                                        HeightRequest="40"
+                                                        Source="{Binding SenderUserImage, Converter={StaticResource ImageUrlConverter}}"
+                                                        WidthRequest="40">
                                                         <ffimageloading:CachedImage.Clip>
-                                                            <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20"/>
+                                                            <EllipseGeometry
+                                                                Center="20,20"
+                                                                RadiusX="20"
+                                                                RadiusY="20" />
                                                         </ffimageloading:CachedImage.Clip>
                                                     </ffimageloading:CachedImage>
                                                 </Frame>
-                                                <Frame CornerRadius="100" 
-                                                       IsVisible="{Binding NotSameImage}"
-                                             BorderColor="{StaticResource PrimaryDark}" 
-                                               BackgroundColor="{StaticResource PrimaryDark}" 
-                                               HorizontalOptions="Start" 
-                                               VerticalOptions="Start" 
-                                               WidthRequest="45" 
-                                               HeightRequest="45" 
-                                               Padding="5" 
-                                               Margin="0,0,-15,0"
-                                               HasShadow="False">
-                                                    <ffimageloading:CachedImage  Source="{Binding EmployUserImage, Converter={StaticResource ImageUrlConverter}}"
-                                       Aspect="AspectFill" 
-                                       HeightRequest="40" 
-                                       WidthRequest="40">
+                                                <Frame
+                                                    Margin="0,0,-15,0"
+                                                    Padding="5"
+                                                    BackgroundColor="{StaticResource PrimaryDark}"
+                                                    BorderColor="{StaticResource PrimaryDark}"
+                                                    CornerRadius="100"
+                                                    HasShadow="False"
+                                                    HeightRequest="45"
+                                                    HorizontalOptions="Start"
+                                                    IsVisible="{Binding NotSameImage}"
+                                                    VerticalOptions="Start"
+                                                    WidthRequest="45">
+                                                    <ffimageloading:CachedImage
+                                                        Aspect="AspectFill"
+                                                        HeightRequest="40"
+                                                        Source="{Binding EmployUserImage, Converter={StaticResource ImageUrlConverter}}"
+                                                        WidthRequest="40">
                                                         <ffimageloading:CachedImage.Clip>
-                                                            <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20"/>
+                                                            <EllipseGeometry
+                                                                Center="20,20"
+                                                                RadiusX="20"
+                                                                RadiusY="20" />
                                                         </ffimageloading:CachedImage.Clip>
                                                     </ffimageloading:CachedImage>
                                                 </Frame>
                                             </HorizontalStackLayout>
                                             <HorizontalStackLayout Grid.Column="1" HorizontalOptions="End">
-                                                <Frame BackgroundColor="White" Padding="7" Margin="0,0,10,0" BorderColor="Transparent" HasShadow="False" CornerRadius="10" VerticalOptions="Center">
-                                                    <Label FontFamily="FARegular" 
-                                       Text="" 
-                                       TextColor="{StaticResource PrimaryDark}" 
-                                       FontSize="22"/>
+                                                <Frame
+                                                    Margin="0,0,10,0"
+                                                    Padding="7"
+                                                    BackgroundColor="White"
+                                                    BorderColor="Transparent"
+                                                    CornerRadius="10"
+                                                    HasShadow="False"
+                                                    VerticalOptions="Center">
+                                                    <Label
+                                                        FontFamily="FARegular"
+                                                        FontSize="22"
+                                                        Text=""
+                                                        TextColor="{StaticResource PrimaryDark}" />
                                                 </Frame>
-                                                <Label Text="{Binding MessageCount}" 
-                                   TextColor="{StaticResource PrimaryDarkText}" 
-                                   FontSize="16" 
-                                   VerticalOptions="Center"/>
+                                                <Label
+                                                    FontSize="16"
+                                                    Text="{Binding MessageCount}"
+                                                    TextColor="{StaticResource PrimaryDarkText}"
+                                                    VerticalOptions="Center" />
                                             </HorizontalStackLayout>
                                         </Grid>
                                     </Grid>
@@ -152,15 +239,27 @@
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
-
                 </VerticalStackLayout>
             </ScrollView>
-            <ImageButton Command="{Binding AddTaskCommand}" Grid.Column="0" Grid.Row="0" Padding="10" WidthRequest="50" Margin="20" VerticalOptions="End" HorizontalOptions="End" CornerRadius="15" BackgroundColor="{StaticResource PrimaryDark}">
+            <ImageButton
+                Grid.Row="0"
+                Grid.Column="0"
+                Margin="20"
+                Padding="10"
+                BackgroundColor="{StaticResource PrimaryDark}"
+                Command="{Binding AddTaskCommand}"
+                CornerRadius="15"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                WidthRequest="50">
                 <ImageButton.Source>
-                    <FontImageSource FontFamily="FASolid" Glyph="&#x2b;" Color="{StaticResource White}"/>
+                    <FontImageSource
+                        FontFamily="FASolid"
+                        Glyph="+"
+                        Color="{StaticResource White}" />
                 </ImageButton.Source>
                 <ImageButton.Behaviors>
-                    <toolkit:TouchBehavior PressedScale="1.05"/>
+                    <toolkit:TouchBehavior PressedScale="1.05" />
                 </ImageButton.Behaviors>
             </ImageButton>
         </Grid>
