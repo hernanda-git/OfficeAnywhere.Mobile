@@ -32,6 +32,7 @@ namespace OfficeAnywhere.Mobile
             // Register services
             builder.Services.AddSingleton<AuthService>();
             builder.Services.AddSingleton<TaskService>();
+            builder.Services.AddSingleton<DelmonTaskCacheService>();
             builder.Services.AddSingleton<FormTemplateService>();
             builder.Services.AddSingleton<HttpClient>();
 
@@ -41,13 +42,14 @@ namespace OfficeAnywhere.Mobile
             builder.Services.AddTransient<TaskViewModel>();
             builder.Services.AddTransient<TaskPage>();
 
+            builder.Services.AddTransient<TaskDetailViewModel>();
+            builder.Services.AddTransient<TaskDetailPage>();
+
             builder.Services.AddTransient<FormTemplateViewModel>();
             builder.Services.AddTransient<FormTemplate>();
 
             builder.Services.AddTransient<ExperimentViewModel>();
             builder.Services.AddTransient<ExperimentPage>();
-
-
 
 #if DEBUG
             builder.Logging.AddDebug();

@@ -13,7 +13,7 @@
     Shell.NavBarIsVisible="False"
     mc:Ignorable="d">
     <ContentPage.Behaviors>
-        <toolkit:StatusBarBehavior StatusBarColor="{StaticResource White}" StatusBarStyle="Default" />
+        <toolkit:StatusBarBehavior StatusBarColor="{StaticResource PrimaryDark}" StatusBarStyle="Default" />
     </ContentPage.Behaviors>
     <ContentPage.Resources>
         <converters:ImageUrlConverter x:Key="ImageUrlConverter" />
@@ -21,49 +21,41 @@
     <ContentPage.Content>
         <Grid ColumnDefinitions="*" RowDefinitions="Auto,*">
             <!--  Header  -->
-            <!--
             <Grid
                 Grid.Row="0"
-                Padding="15,10,15,10"
-                BackgroundColor="{StaticResource White}"
-                ColumnDefinitions="1.5*,7*,1.5*">
+                Margin="0"
+                Padding="20,25,20,20"
+                BackgroundColor="{StaticResource PrimaryDark}"
+                ColumnDefinitions="Auto,*"
+                HorizontalOptions="Fill"
+                VerticalOptions="Start">
                 <ImageButton
                     Grid.Column="0"
-                    Padding="10"
-                    BackgroundColor="{StaticResource PrimaryDark}"
                     Command="{Binding BackCommand}"
-                    CornerRadius="8"
-                    HorizontalOptions="Start"
                     VerticalOptions="Center">
                     <ImageButton.Source>
                         <FontImageSource
                             FontFamily="FASolid"
-                            Glyph=""
-                            Size="22"
+                            Glyph=""
                             Color="{StaticResource White}" />
                     </ImageButton.Source>
                     <ImageButton.Behaviors>
-                        <toolkit:TouchBehavior PressedScale="1.12" />
+                        <toolkit:TouchBehavior PressedScale="1.1" />
                     </ImageButton.Behaviors>
                 </ImageButton>
                 <Label
                     Grid.Column="1"
                     FontAttributes="Bold"
-                    FontSize="Large"
+                    FontSize="23"
                     HorizontalOptions="Center"
-                    Text="تفاصيل المهمة"
-                    TextColor="{StaticResource PrimaryDarkText}"
+                    Text="{Binding Title}"
+                    TextColor="{StaticResource White}"
                     VerticalOptions="Center" />
             </Grid>
-
-            -->
             <!--  Content  -->
-            <!--
-            <ScrollView Grid.Row="1">
+            <!--<ScrollView Grid.Row="1">
                 <VerticalStackLayout Padding="15,10,15,15">
-            -->
-            <!--  Task Title and Type  -->
-            <!--
+                    Task Title and Type
                     <Frame
                         Margin="0,0,0,20"
                         BackgroundColor="{StaticResource TaskBackground}"
@@ -85,10 +77,7 @@
                                 TextColor="{StaticResource PrimaryDark}" />
                         </Grid>
                     </Frame>
-
-            -->
-            <!--  Date and Time  -->
-            <!--
+                    Date and Time
                     <Frame
                         Margin="0,0,0,20"
                         BackgroundColor="{StaticResource TaskBackground}"
@@ -126,10 +115,7 @@
                                 TextColor="{StaticResource PrimaryDark}" />
                         </Grid>
                     </Frame>
-
-            -->
-            <!--  Sender and Employee  -->
-            <!--
+                    Sender and Employee
                     <Frame
                         Margin="0,0,0,20"
                         BackgroundColor="{StaticResource TaskBackground}"
@@ -199,10 +185,7 @@
                             </HorizontalStackLayout>
                         </Grid>
                     </Frame>
-
-            -->
-            <!--  Message Count  -->
-            <!--
+                    Message Count
                     <Frame
                         Margin="0,0,0,20"
                         BackgroundColor="{StaticResource TaskBackground}"
@@ -235,10 +218,7 @@
                                 VerticalOptions="Center" />
                         </HorizontalStackLayout>
                     </Frame>
-
-            -->
-            <!--  Description  -->
-            <!--
+                    Description
                     <Frame
                         Margin="0,0,0,20"
                         BackgroundColor="{StaticResource TaskBackground}"

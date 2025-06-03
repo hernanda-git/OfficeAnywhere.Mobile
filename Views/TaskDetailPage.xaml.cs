@@ -1,22 +1,16 @@
 
 using OfficeAnywhere.Mobile.Models;
+using OfficeAnywhere.Mobile.ViewModels;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace OfficeAnywhere.Mobile.Views;
 
-[QueryProperty(nameof(TaskCard), "TaskCard")]
 public partial class TaskDetailPage : ContentPage
 {
-    TaskCard? taskCard;
-    public TaskCard? TaskCard
+    public TaskDetailPage(TaskDetailViewModel viewModel)
     {
-        get => taskCard;
-        set
-        {
-            taskCard = value;
-            OnPropertyChanged();
-        }
+        BindingContext = viewModel;
+        InitializeComponent();
     }
-
-    public TaskDetailPage() => InitializeComponent();
 }
-

@@ -12,6 +12,7 @@ public class TaskCard
     public string EmployUserImage { get; set; } = string.Empty;
     public bool NotSameImage { get; set; } = false;
     public int MessageCount { get; set; } = 0;
+    public string DelmonTask { get; set; } = string.Empty;
 }
 
 public class TaskData

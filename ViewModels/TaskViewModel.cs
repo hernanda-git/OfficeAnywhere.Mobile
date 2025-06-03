@@ -6,6 +6,7 @@ using OfficeAnywhere.Mobile.Models;
 using OfficeAnywhere.Mobile.Services;
 using OfficeAnywhere.Mobile.Views;
 using System.Collections.ObjectModel;
+using System.Text.Json;
 using System.Windows.Input;
 
 namespace OfficeAnywhere.Mobile.ViewModels;
@@ -13,6 +14,7 @@ namespace OfficeAnywhere.Mobile.ViewModels;
 public partial class TaskViewModel : ObservableObject
 {
     private readonly TaskService _taskService;
+    private readonly DelmonTaskCacheService _delmonTaskCacheService;
 
     public ICommand AddTaskCommand { get; }
 
@@ -25,9 +27,25 @@ public partial class TaskViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<TaskCard> taskCardList = new();
 
-    public TaskViewModel(TaskService taskService)
+    private TaskCard? selectedTask;
+    public TaskCard? SelectedTask
+    {
+        get => selectedTask;
+        set
+        {
+            SetProperty(ref selectedTask, value);
+            if (value != null)
+            {
+                TaskSelectedCommand.Execute(value);
+                SelectedTask = null;
+            }
+        }
+    }
+
+    public TaskViewModel(TaskService taskService, DelmonTaskCacheService delmonTaskCacheService)
     {
         _taskService = taskService;
+        _delmonTaskCacheService = delmonTaskCacheService;
         AddTaskCommand = new Command(async () => await AddTask());
         InitializeAsync();
     }
@@ -79,6 +97,8 @@ public partial class TaskViewModel : ObservableObject
         {
             IsBusy = true;
             var taskData = await _taskService.FetchTaskData();
+            //var taskData = await _taskService.FetchTaskDataString();
+
             if (taskData?.DelmonTasks != null)
             {
                 // Map DelmonTask to TaskCard
@@ -91,7 +111,8 @@ public partial class TaskViewModel : ObservableObject
                     SenderUserImage = task.SenderUserImage,
                     EmployUserImage = task.EmployUserImage,
                     NotSameImage = task.SenderUserImage != task.EmployUserImage,
-                    MessageCount = task.MessageCount
+                    MessageCount = task.MessageCount,
+                    DelmonTask = JsonSerializer.Serialize(task)
                 }).ToList();
 
                 // Update ObservableCollection
@@ -124,16 +145,18 @@ public partial class TaskViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public async Task TaskSelectedAsync(TaskCard selectedTask)
+    public async Task TaskSelectedAsync(TaskCard? selectedTask)
     {
-        if (selectedTask != null)
-        {
-            await Shell.Current.GoToAsync("TaskDetailPage", new Dictionary<string, object>
-                {
-                    { "TaskCard", selectedTask }
-                });
-        }
+        if (IsBusy || selectedTask == null) return;
+
+        IsBusy = true;
+
+        _delmonTaskCacheService.CacheTask(selectedTask.DelmonTask);
+        await Shell.Current.GoToAsync("//TaskDetailPage", true);
+
+        IsBusy = false;
     }
+
 
     private async Task AddTask()
     {
