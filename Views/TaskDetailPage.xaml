@@ -52,6 +52,55 @@
                     TextColor="{StaticResource White}"
                     VerticalOptions="Center" />
             </Grid>
+
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout>
+                    <Grid
+                        Padding="20"
+                        ColumnDefinitions="9*,1*"
+                        ColumnSpacing="10"
+                        RowDefinitions="Auto">
+                        <Frame
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="0"
+                            Padding="5"
+                            BackgroundColor="{StaticResource PrimaryDark}"
+                            BorderColor="{StaticResource PrimaryDark}"
+                            CornerRadius="100"
+                            HasShadow="False"
+                            HeightRequest="45"
+                            HorizontalOptions="Start"
+                            VerticalOptions="Start"
+                            WidthRequest="45">
+                            <ffimageloading:CachedImage
+                                Aspect="AspectFill"
+                                HeightRequest="40"
+                                Source="sample_profile_pic.jpg"
+                                WidthRequest="40">
+                                <ffimageloading:CachedImage.Clip>
+                                    <EllipseGeometry
+                                        Center="20,20"
+                                        RadiusX="20"
+                                        RadiusY="20" />
+                                </ffimageloading:CachedImage.Clip>
+                            </ffimageloading:CachedImage>
+                        </Frame>
+                        <Border
+                            Padding="10"
+                            Stroke="{StaticResource PrimaryDark}"
+                            StrokeShape="RoundRectangle 10,10,10,10">
+                            <Label FontAttributes="Bold" Text="Test Comment" />
+                        </Border>
+                    </Grid>
+                    <VerticalStackLayout
+                        x:Name="FormLayout"
+                        FlowDirection="RightToLeft"
+                        HorizontalOptions="Fill"
+                        VerticalOptions="Fill" />
+                </VerticalStackLayout>
+
+            </ScrollView>
             <!--  Content  -->
             <!--<ScrollView Grid.Row="1">
                 <VerticalStackLayout Padding="15,10,15,15">
