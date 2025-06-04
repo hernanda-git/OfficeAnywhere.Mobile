@@ -1,4 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using FFImageLoading.Maui;
+using FFImageLoading.Transformations;
+using FFImageLoading.Work;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Shapes;
 using OfficeAnywhere.Mobile.Models;
@@ -14,10 +18,13 @@ public partial class TaskDetailViewModel : ObservableObject
     private readonly DelmonTaskCacheService _delmonTaskCacheService;
     public string? DelmonTask { get; private set; }
 
+    [ObservableProperty]
+    private bool isBusy = false;
 
     [ObservableProperty]
     private string? title = "Task Details";
 
+    public event Action? ViewsReady;
 
     [ObservableProperty]
     private ObservableCollection<View> dynamicContents = new();
@@ -25,260 +32,305 @@ public partial class TaskDetailViewModel : ObservableObject
     public TaskDetailViewModel(DelmonTaskCacheService delmonTaskCacheService)
     {
         _delmonTaskCacheService = delmonTaskCacheService;
+
         DelmonTask = _delmonTaskCacheService.GetCachedTask();
 
         if (DelmonTask is not null)
         {
-            using JsonDocument document = JsonDocument.Parse(DelmonTask);
-            JsonElement root = document.RootElement;
-
-            //GenerateDetailElements(root);
+            _ = InitializeAsync(DelmonTask); // fire-and-forget
         }
         else
         {
-            ToListTask();
+            _ = ToListTask();
         }
     }
 
-    private async void ToListTask() => await Shell.Current.GoToAsync("//TaskPage");
-
-    //private void GenerateDetailElements(JsonElement json)
-    //{
-    //    DynamicContents.Clear();
-
-    //    //string? addedDate = json.TryGetProperty("AddedDate", out JsonElement addedDateElement) ? addedDateElement.GetString() : string.Empty;
-    //    //string? endDate = json.TryGetProperty("EndDate", out JsonElement endDateElement) ? endDateElement.GetString() : string.Empty;
-    //    //string? lastUpdateDate = json.TryGetProperty("LastUpdatedDate", out JsonElement lastUpdateDateElement) ? lastUpdateDateElement.GetString() : string.Empty;
-    //    //string? taskStateId = json.TryGetProperty("TaskStateId", out JsonElement taskStateIdElement) ? taskStateIdElement.GetString() : string.Empty;
-    //    //string? taskTypeId = json.TryGetProperty("TaskTypeId", out JsonElement taskTypeIdElement) ? taskTypeIdElement.GetString() : string.Empty;
-    //    //string? senderUserImage = json.TryGetProperty("SenderUserImage", out JsonElement senderUserImageElement) ? senderUserImageElement.GetString() : string.Empty;
-    //    //string? employUserImage = json.TryGetProperty("EmployUserImage", out JsonElement employUserImageElement) ? employUserImageElement.GetString() : string.Empty;
-    //    //string? isRead = json.TryGetProperty("IsRead", out JsonElement isReadElement) ? isReadElement.GetString() : string.Empty;
-    //    //string? messageCount = json.TryGetProperty("MessageCount", out JsonElement messageCountElement) ? messageCountElement.GetString() : string.Empty;
-    //    //string? formData = json.TryGetProperty("FromData", out JsonElement formDataElement) ? formDataElement.GetString() : string.Empty;
-    //    //string? messages = json.TryGetProperty("Messages", out JsonElement messagesElement) ? messagesElement.GetString() : string.Empty;
-
-    //    string? title = json.TryGetProperty("Title", out JsonElement titleElement) ? titleElement.GetString() : string.Empty;
-    //    if (!string.IsNullOrEmpty(title))
-    //    {
-    //        Title = title;
-    //    }
-
-    //    var border = new Border();
-    //    if (App.Current != null)
-    //    {
-    //        if (App.Current.Resources.TryGetValue("PrimaryDark", out var primaryDark) && primaryDark is Color primaryDarkColor)
-    //        {
-    //            border.Background = new SolidColorBrush(primaryDarkColor);
-    //        }
-
-    //        border.Stroke = new SolidColorBrush(Colors.Transparent);
-    //        border.StrokeThickness = 0;
-    //        border.StrokeShape = new RoundRectangle
-    //        {
-    //            CornerRadius = new CornerRadius(0, 0, 30, 30)
-    //        };
-
-    //        border.Padding = new Thickness(20);
-    //    }
-    //    var stackLayout = new StackLayout();
-    //    stackLayout.Padding = new Thickness(0);
-    //    stackLayout.Margin = new Thickness(0);
-    //    stackLayout.HorizontalOptions = LayoutOptions.Fill;
-
-    //    // badge for task state
-    //    string? taskStateName = json.TryGetProperty("TaskStateName", out JsonElement taskStateNameElement) ? taskStateNameElement.GetString() : string.Empty;
-    //    string? color = json.TryGetProperty("Color", out JsonElement colorElement) ? colorElement.GetString() : string.Empty;
-    //    if (!string.IsNullOrEmpty(taskStateName) && !string.IsNullOrEmpty(color))
-    //    {
-    //        var grid = new Grid
-    //        {
-    //            ColumnDefinitions = { new ColumnDefinition { Width = GridLength.Star }, new ColumnDefinition { Width = GridLength.Star } },
-    //            RowDefinitions = { new RowDefinition { Height = GridLength.Auto } }
-    //        };
-
-    //        var badge = GenerateBadge(taskStateName, color);
-
-    //        Grid.SetRow(badge, 0);
-    //        Grid.SetColumn(badge, 0);
-    //        grid.HorizontalOptions = LayoutOptions.Fill;
-
-    //        grid.Children.Add(badge);
-    //        stackLayout.Add(grid);
-    //    }
-
-    //    string? senderName = json.TryGetProperty("SenderName", out JsonElement senderNameElement) ? senderNameElement.GetString() : string.Empty;
-    //    if (!string.IsNullOrEmpty(senderName))
-    //    {
-    //        stackLayout.Add(GenerateLabel($"From {senderName}", FontSizeOption.Description, TextAlignment.Start, Colors.White, null, new Thickness(0, 0, 0, 0)));
-    //    }
-
-    //    string? employName = json.TryGetProperty("EmployName", out JsonElement employNameElement) ? employNameElement.GetString() : string.Empty;
-    //    if (!string.IsNullOrEmpty(senderName))
-    //    {
-    //        stackLayout.Add(GenerateLabel($"To {employName}", FontSizeOption.Description, TextAlignment.Start, Colors.White));
-    //    }
-
-    //    string? details = json.TryGetProperty("Details", out JsonElement detailsElement) ? detailsElement.GetString() : string.Empty;
-    //    if (!string.IsNullOrEmpty(details))
-    //    {
-    //        stackLayout.Add(GenerateLabel(details, FontSizeOption.Medium, TextAlignment.Start, Colors.White));
-    //    }
-
-    //    string? taskTypeName = json.TryGetProperty("TaskTypeName", out JsonElement taskTypeNameElement) ? taskTypeNameElement.GetString() : string.Empty;
-    //    if (!string.IsNullOrEmpty(taskTypeName))
-    //    {
-    //        stackLayout.Add(GenerateLabel(taskTypeName, FontSizeOption.Description, TextAlignment.Start, Colors.White));
-    //    }
-
-    //    border.Content = stackLayout;
-    //    DynamicContents.Add(border);
-    //}
-
-    private void GenerateDetailElements(JsonElement json)
+    private async Task InitializeAsync(string taskJson)
     {
-        DynamicContents.Clear();
-
-        //string? addedDate = json.TryGetProperty("AddedDate", out JsonElement addedDateElement) ? addedDateElement.GetString() : string.Empty;
-        //string? endDate = json.TryGetProperty("EndDate", out JsonElement endDateElement) ? endDateElement.GetString() : string.Empty;
-        //string? lastUpdateDate = json.TryGetProperty("LastUpdatedDate", out JsonElement lastUpdateDateElement) ? lastUpdateDateElement.GetString() : string.Empty;
-        //string? taskStateId = json.TryGetProperty("TaskStateId", out JsonElement taskStateIdElement) ? taskStateIdElement.GetString() : string.Empty;
-        //string? taskTypeId = json.TryGetProperty("TaskTypeId", out JsonElement taskTypeIdElement) ? taskTypeIdElement.GetString() : string.Empty;
-        //string? senderUserImage = json.TryGetProperty("SenderUserImage", out JsonElement senderUserImageElement) ? senderUserImageElement.GetString() : string.Empty;
-        //string? employUserImage = json.TryGetProperty("EmployUserImage", out JsonElement employUserImageElement) ? employUserImageElement.GetString() : string.Empty;
-        //string? isRead = json.TryGetProperty("IsRead", out JsonElement isReadElement) ? isReadElement.GetString() : string.Empty;
-        //string? messageCount = json.TryGetProperty("MessageCount", out JsonElement messageCountElement) ? messageCountElement.GetString() : string.Empty;
-        //string? formData = json.TryGetProperty("FromData", out JsonElement formDataElement) ? formDataElement.GetString() : string.Empty;
-        //string? messages = json.TryGetProperty("Messages", out JsonElement messagesElement) ? messagesElement.GetString() : string.Empty;
-
-        string? title = json.TryGetProperty("Title", out JsonElement titleElement) ? titleElement.GetString() : string.Empty;
-        if (!string.IsNullOrEmpty(title))
+        await Task.Run(() =>
         {
-            Title = title;
-        }
+            using var document = JsonDocument.Parse(taskJson);
+            JsonElement root = document.RootElement;
 
-        var border = new Border();
-        if (App.Current != null)
-        {
-            if (App.Current.Resources.TryGetValue("PrimaryDark", out var primaryDark) && primaryDark is Color primaryDarkColor)
+            var views = GenerateDetailViews(root);
+            MainThread.BeginInvokeOnMainThread(() =>
             {
-                border.Background = new SolidColorBrush(primaryDarkColor);
+                DynamicContents.Clear();
+                foreach (var view in views)
+                    DynamicContents.Add(view);
+
+                ViewsReady?.Invoke();
+            });
+        });
+    }
+
+    private async Task ToListTask()
+    {
+        await Shell.Current.GoToAsync("//TaskPage");
+    }
+
+    [RelayCommand]
+    public async Task TaskSelectedAsync(TaskCard? selectedTask)
+    {
+        if (IsBusy || selectedTask == null) return;
+
+        await Shell.Current.GoToAsync("//TaskPage");
+
+        IsBusy = false;
+    }
+
+    private IEnumerable<View> GenerateDetailViews(JsonElement json)
+    {
+        var views = new List<View>();
+
+        string? senderUserImage = json.TryGetProperty("SenderUserImage", out JsonElement senderUserImageElement) ? senderUserImageElement.GetString() : string.Empty;
+        string? senderName = json.TryGetProperty("SenderName", out JsonElement senderNameElement) ? senderNameElement.GetString() : string.Empty;
+        string? addedDateRaw = json.TryGetProperty("AddedDate", out JsonElement addedDateElement) ? addedDateElement.GetString() : string.Empty;
+
+        string formattedDate = DateTime.TryParse(addedDateRaw, out var parsedDate)
+            ? parsedDate.ToString("dd MMM yyyy")
+            : string.Empty;
+
+        var profileFrame = CreateProfileImage(senderUserImage);
+        var nameDateGrid = CreateNameDateGrid(senderName, formattedDate);
+        var taskStateView = CreateTaskDetailCard(json);
+
+        var containerGrid = new Grid
+        {
+            RowSpacing = 2,
+            ColumnSpacing = 5,
+            FlowDirection = FlowDirection.RightToLeft,
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = GridLength.Star },
+                new ColumnDefinition { Width = GridLength.Auto }
+            },
+            RowDefinitions =
+            {
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = GridLength.Auto }
             }
+        };
 
-            border.Stroke = new SolidColorBrush(Colors.Transparent);
-            border.StrokeThickness = 0;
-            border.StrokeShape = new RoundRectangle
-            {
-                CornerRadius = new CornerRadius(0, 0, 30, 30)
-            };
+        Grid.SetRow(profileFrame, 0);
+        Grid.SetRowSpan(profileFrame, 2);
+        Grid.SetColumn(profileFrame, 1);
 
-            border.Padding = new Thickness(20);
-        }
-        var stackLayout = new StackLayout();
-        stackLayout.Padding = new Thickness(0);
-        stackLayout.Margin = new Thickness(0);
-        stackLayout.HorizontalOptions = LayoutOptions.Fill;
+        Grid.SetRow(nameDateGrid, 0);
+        Grid.SetColumn(nameDateGrid, 0);
 
-        // badge for task state
+        Grid.SetRow(taskStateView, 1);
+        Grid.SetColumn(taskStateView, 0);
+
+        containerGrid.Children.Add(profileFrame);
+        containerGrid.Children.Add(nameDateGrid);
+        containerGrid.Children.Add(taskStateView);
+
+        views.Add(containerGrid);
+        return views;
+    }
+    private Border CreateTaskDetailCard(JsonElement json)
+    {
+        var border = new Border
+        {
+            Padding = 10,
+            Stroke = new SolidColorBrush(GetPrimaryDark()),
+            StrokeShape = new RoundRectangle { CornerRadius = new CornerRadius(10) }
+        };
+
         string? taskStateName = json.TryGetProperty("TaskStateName", out JsonElement taskStateNameElement) ? taskStateNameElement.GetString() : string.Empty;
-        string? color = json.TryGetProperty("Color", out JsonElement colorElement) ? colorElement.GetString() : string.Empty;
+        string? color = json.TryGetProperty("Color", out JsonElement ColorElement) ? ColorElement.GetString() : string.Empty;
+        string? taskTypeName = json.TryGetProperty("TaskTypeName", out JsonElement taskTypeNameElement) ? taskTypeNameElement.GetString() : string.Empty;
+        string? details = json.TryGetProperty("Details", out JsonElement detailsElement) ? detailsElement.GetString() : string.Empty;
+
         if (!string.IsNullOrEmpty(taskStateName) && !string.IsNullOrEmpty(color))
         {
             var grid = new Grid
             {
-                ColumnDefinitions = { new ColumnDefinition { Width = GridLength.Star }, new ColumnDefinition { Width = GridLength.Star } },
-                RowDefinitions = { new RowDefinition { Height = GridLength.Auto } }
+                ColumnDefinitions =
+                {
+                    new ColumnDefinition { Width = GridLength.Star },
+                    new ColumnDefinition { Width = GridLength.Star }
+                },
+                RowDefinitions =
+                {
+                    new RowDefinition { Height = GridLength.Auto },
+                    new RowDefinition { Height = GridLength.Auto }
+                },
+                RowSpacing = 10
             };
 
             var badge = GenerateBadge(taskStateName, color);
-
             Grid.SetRow(badge, 0);
             Grid.SetColumn(badge, 0);
-            grid.HorizontalOptions = LayoutOptions.Fill;
-
             grid.Children.Add(badge);
-            stackLayout.Add(grid);
+
+            if (!string.IsNullOrEmpty(taskTypeName))
+            {
+                var label = GenerateLabel(taskTypeName, FontSizeOption.Description, TextAlignment.End);
+                Grid.SetRow(label, 0);
+                Grid.SetColumn(label, 1);
+                grid.Children.Add(label);
+            }
+
+            if (!string.IsNullOrEmpty(details))
+            {
+                var desc = GenerateLabel(details, FontSizeOption.Medium, TextAlignment.Start);
+                Grid.SetRow(desc, 1);
+                Grid.SetColumn(desc, 0);
+                Grid.SetColumnSpan(desc, 2);
+                grid.Children.Add(desc);
+            }
+
+            border.Content = grid;
         }
 
-        string? senderName = json.TryGetProperty("SenderName", out JsonElement senderNameElement) ? senderNameElement.GetString() : string.Empty;
-        if (!string.IsNullOrEmpty(senderName))
+        return border;
+    }
+
+    private Frame CreateProfileImage(string? imagePath)
+    {
+        string imageUrl = string.IsNullOrWhiteSpace(imagePath)
+            ? "sample_profile_picture.jpeg"
+            : $"https://o-anywhere.com{imagePath}";
+
+        var image = new CachedImage
         {
-            stackLayout.Add(GenerateLabel($"From {senderName}", FontSizeOption.Description, TextAlignment.Start, Colors.White, null, new Thickness(0, 0, 0, 0)));
-        }
+            Source = imageUrl,
+            Aspect = Aspect.AspectFill,
+            HeightRequest = 40,
+            WidthRequest = 40,
+            Transformations = new List<ITransformation> { new CircleTransformation() }
+        };
 
-        string? employName = json.TryGetProperty("EmployName", out JsonElement employNameElement) ? employNameElement.GetString() : string.Empty;
-        if (!string.IsNullOrEmpty(senderName))
+        return new Frame
         {
-            stackLayout.Add(GenerateLabel($"To {employName}", FontSizeOption.Description, TextAlignment.Start, Colors.White));
-        }
+            Margin = 0,
+            Padding = 5,
+            CornerRadius = 100,
+            HeightRequest = 45,
+            WidthRequest = 45,
+            HasShadow = false,
+            HorizontalOptions = LayoutOptions.Start,
+            VerticalOptions = LayoutOptions.Start,
+            BackgroundColor = GetPrimaryDark(),
+            BorderColor = GetPrimaryDark(),
+            Content = image
+        };
+    }
 
-        string? details = json.TryGetProperty("Details", out JsonElement detailsElement) ? detailsElement.GetString() : string.Empty;
-        if (!string.IsNullOrEmpty(details))
+    private Grid CreateNameDateGrid(string? senderName, string formattedDate)
+    {
+        var grid = new Grid
         {
-            stackLayout.Add(GenerateLabel(details, FontSizeOption.Medium, TextAlignment.Start, Colors.White));
-        }
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = GridLength.Star },
+                new ColumnDefinition { Width = GridLength.Star }
+            },
+            RowDefinitions = { new RowDefinition { Height = GridLength.Auto } },
+            HorizontalOptions = LayoutOptions.Fill
+        };
 
-        string? taskTypeName = json.TryGetProperty("TaskTypeName", out JsonElement taskTypeNameElement) ? taskTypeNameElement.GetString() : string.Empty;
-        if (!string.IsNullOrEmpty(taskTypeName))
+        var nameLabel = new Label
         {
-            stackLayout.Add(GenerateLabel(taskTypeName, FontSizeOption.Description, TextAlignment.Start, Colors.White));
-        }
+            Text = senderName,
+            FontAttributes = FontAttributes.Bold,
+            Padding = new Thickness(5, 0, 0, 0),
+            HorizontalTextAlignment = TextAlignment.End,
+            HorizontalOptions = LayoutOptions.End
+        };
 
-        border.Content = stackLayout;
-        DynamicContents.Add(border);
+        var dateLabel = new Label
+        {
+            Text = formattedDate,
+            FontAttributes = FontAttributes.Bold,
+            Padding = new Thickness(0, 0, 5, 0),
+            HorizontalTextAlignment = TextAlignment.Start,
+            HorizontalOptions = LayoutOptions.Start
+        };
+
+        Grid.SetColumnSpan(nameLabel, 2);
+        Grid.SetColumnSpan(dateLabel, 2);
+
+        grid.Children.Add(nameLabel);
+        grid.Children.Add(dateLabel);
+
+        return grid;
+    }
+
+    private bool IsUrl(string input)
+    {
+        return Uri.TryCreate(input, UriKind.Absolute, out var uriResult)
+            && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
     }
 
     private View GenerateLabel(string text, FontSizeOption? fontSize = null, TextAlignment? alignment = null, Color? textColor = null, string? id = null, Thickness? margin = null)
     {
-        var parts = text.Split("<br />", StringSplitOptions.None);
+        var lines = text
+            .Replace("<br />", "\n") // Normalize line breaks
+            .Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
         var color = textColor ?? Colors.Black;
         var size = (double)(fontSize ?? FontSizeOption.Medium);
         var align = alignment ?? TextAlignment.Start;
         var labelMargin = margin ?? new Thickness(0, 0, 0, 20);
 
-        if (parts.Length == 1)
-        {
-            return new Label
-            {
-                Text = parts[0],
-                FontAttributes = FontAttributes.Bold,
-                FontSize = size,
-                TextColor = color,
-                HorizontalTextAlignment = align,
-                Margin = labelMargin,
-                StyleId = id
-            };
-        }
-
         var layout = new VerticalStackLayout { Spacing = 5 };
-        for (int i = 0; i < parts.Length; i++)
-        {
-            var part = parts[i].Trim();
-            if (string.IsNullOrEmpty(part)) continue;
 
-            layout.Children.Add(new Label
+        for (int i = 0; i < lines.Length; i++)
+        {
+            string line = lines[i].Trim();
+            if (string.IsNullOrEmpty(line)) continue;
+
+            if (IsUrl(line))
             {
-                Text = part,
-                FontAttributes = FontAttributes.Bold,
-                FontSize = size,
-                TextColor = color,
-                HorizontalTextAlignment = align,
-                Margin = margin ?? new Thickness(0, 0, 0, 5),
-                StyleId = !string.IsNullOrEmpty(id) ? $"{id}_{i}" : null
-            });
+                var linkLabel = new Label
+                {
+                    Text = line,
+                    TextColor = Colors.Blue,
+                    FontSize = size,
+                    FontAttributes = FontAttributes.Bold,
+                    VerticalOptions = LayoutOptions.Fill,
+                    HorizontalOptions = LayoutOptions.Fill,
+                    HorizontalTextAlignment = align,
+                    Margin = margin ?? new Thickness(0, 0, 0, 5),
+                    StyleId = !string.IsNullOrEmpty(id) ? $"{id}_link_{i}" : null
+                };
+
+                var tap = new TapGestureRecognizer
+                {
+                    Command = new Command(() => Launcher.Default.OpenAsync(new Uri(line)))
+                };
+                linkLabel.GestureRecognizers.Add(tap);
+                layout.Children.Add(linkLabel);
+            }
+            else
+            {
+                layout.Children.Add(new Label
+                {
+                    Text = line,
+                    FontAttributes = FontAttributes.Bold,
+                    VerticalOptions = LayoutOptions.Fill,
+                    HorizontalOptions = LayoutOptions.Fill,
+                    FontSize = size,
+                    TextColor = color,
+                    HorizontalTextAlignment = align,
+                    Margin = margin ?? new Thickness(0, 0, 0, 5),
+                    StyleId = !string.IsNullOrEmpty(id) ? $"{id}_{i}" : null
+                });
+            }
         }
 
         return layout;
     }
 
-    private Color GetPrimaryDarkOrDefault(Color fallback)
+    private Color GetPrimaryDark()
     {
-        if (App.Current?.Resources.TryGetValue("PrimaryDark", out var value) == true && value is Color primaryDark)
-        {
-            return primaryDark;
-        }
+        if (App.Current?.Resources.TryGetValue("PrimaryDark", out var val) == true && val is Color c)
+            return c;
 
-        return fallback;
+        return Colors.Black;
     }
 
     private View GenerateBadge(string text, string bootstrapClass, string id = "")

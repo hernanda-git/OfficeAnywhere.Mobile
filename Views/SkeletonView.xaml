@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="OfficeAnywhere.Mobile.Views.SkeletonView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:OfficeAnywhere.Mobile.Controls">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Style TargetType="controls:SkeletonView">
+                <Setter Property="BackgroundColor" Value="#E4E4E4" />
+                <Setter Property="CornerRadius" Value="4" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <Frame Margin="0,0,0,20">
+        <Grid
+            ColumnDefinitions="*,*,*,*"
+            ColumnSpacing="10"
+            RowDefinitions="*, *, *, *"
+            RowSpacing="10">
+
+            <controls:SkeletonView
+                Grid.Row="3"
+                Grid.Column="0"
+                HeightRequest="50"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                WidthRequest="50">
+                <controls:SkeletonView.Clip>
+                    <EllipseGeometry
+                        Center="20,20"
+                        RadiusX="20"
+                        RadiusY="20" />
+                </controls:SkeletonView.Clip>
+            </controls:SkeletonView>
+
+            <controls:SkeletonView
+                Grid.Row="0"
+                Grid.Column="0"
+                HeightRequest="16"
+                HorizontalOptions="Fill" />
+
+            <controls:SkeletonView
+                Grid.Row="1"
+                Grid.Column="0"
+                HeightRequest="16"
+                HorizontalOptions="Fill" />
+
+            <controls:SkeletonView
+                Grid.Row="0"
+                Grid.Column="2"
+                Grid.ColumnSpan="2"
+                HeightRequest="16"
+                HorizontalOptions="Fill" />
+
+            <controls:SkeletonView
+                Grid.Row="1"
+                Grid.Column="3"
+                HeightRequest="16"
+                HorizontalOptions="Fill" />
+
+            <controls:SkeletonView
+                Grid.Row="3"
+                Grid.Column="3"
+                HeightRequest="16"
+                HorizontalOptions="Fill" />
+        </Grid>
+    </Frame>
+
+</ContentView>

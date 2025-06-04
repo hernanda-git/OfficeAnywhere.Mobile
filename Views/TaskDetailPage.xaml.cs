@@ -9,18 +9,21 @@ public partial class TaskDetailPage : ContentPage
 
     public TaskDetailPage(TaskDetailViewModel viewModel)
     {
-        BindingContext = this.viewModel = viewModel;
         InitializeComponent();
+        BindingContext = this.viewModel = viewModel;
+
+        viewModel.ViewsReady += () =>
+        {
+            FormLayout.Children.Clear();
+            foreach (var view in viewModel.DynamicContents)
+            {
+                FormLayout.Children.Add(view);
+            }
+        };
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
-
-        FormLayout.Children.Clear();
-        foreach (var view in viewModel.DynamicContents)
-        {
-            FormLayout.Children.Add(view);
-        }
     }
 }

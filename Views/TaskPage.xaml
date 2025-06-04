@@ -15,7 +15,13 @@
         <toolkit:StatusBarBehavior StatusBarColor="{StaticResource White}" StatusBarStyle="Default" />
     </ContentPage.Behaviors>
     <ContentPage.Resources>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
         <converters:ImageUrlConverter x:Key="ImageUrlConverter" />
+        <ResourceDictionary>
+            <DataTemplate x:Key="SkeletonView">
+                <local:SkeletonView />
+            </DataTemplate>
+        </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
         <Grid ColumnDefinitions="*" RowDefinitions="*">
@@ -111,6 +117,12 @@
                             </Grid>
                         </Frame>
                     </Grid>
+
+                    <local:SkeletonView IsVisible="{Binding IsBusy}" />
+                    <local:SkeletonView IsVisible="{Binding IsBusy}" />
+                    <local:SkeletonView IsVisible="{Binding IsBusy}" />
+                    <local:SkeletonView IsVisible="{Binding IsBusy}" />
+                    <local:SkeletonView IsVisible="{Binding IsBusy}" />
 
                     <CollectionView
                         Margin="0"
@@ -239,133 +251,6 @@
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
-
-                    <!--<CollectionView
-                        Margin="10"
-                        ItemsSource="{Binding TaskCardList}"
-                        SelectionChanged="OnTaskSelected"
-                        SelectionMode="Single">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Frame
-                                    Margin="0,0,0,20"
-                                    BackgroundColor="{StaticResource TaskBackground}"
-                                    BorderColor="Transparent"
-                                    HasShadow="False">
-                                    <Grid RowDefinitions="*,*,*">
-                                        <Grid Grid.Row="0" ColumnDefinitions="*,*">
-                                            <Label
-                                                Grid.Column="0"
-                                                FontSize="16"
-                                                Text="{Binding LastUpdatedDate, StringFormat='{0:MMMM dd}'}"
-                                                TextColor="{StaticResource PrimaryDark}"
-                                                VerticalOptions="Center" />
-                                            <Label
-                                                Grid.Column="1"
-                                                FontAttributes="Bold"
-                                                FontSize="22"
-                                                HorizontalTextAlignment="End"
-                                                Text="{Binding Title}"
-                                                TextColor="{StaticResource PrimaryDark}"
-                                                VerticalOptions="Center" />
-                                        </Grid>
-                                        <Grid Grid.Row="1" ColumnDefinitions="*,*">
-                                            <Label
-                                                Grid.Column="0"
-                                                FontSize="16"
-                                                Text="{Binding LastUpdatedDate, StringFormat='{0:HH:mm}'}"
-                                                TextColor="{StaticResource PrimaryDark}"
-                                                VerticalOptions="Center" />
-                                            <Label
-                                                Grid.Column="1"
-                                                FontSize="22"
-                                                HorizontalTextAlignment="End"
-                                                Text="{Binding TaskTypeName}"
-                                                TextColor="{StaticResource PrimaryDark}"
-                                                VerticalOptions="Center" />
-                                        </Grid>
-                                        <Grid
-                                            Grid.Row="2"
-                                            Margin="0,20,0,0"
-                                            ColumnDefinitions="*,*">
-                                            <HorizontalStackLayout Grid.Column="0" HorizontalOptions="Start">
-                                                <Frame
-                                                    Margin="0,0,-15,0"
-                                                    Padding="5"
-                                                    BackgroundColor="{StaticResource PrimaryDark}"
-                                                    BorderColor="{StaticResource PrimaryDark}"
-                                                    CornerRadius="100"
-                                                    HasShadow="False"
-                                                    HeightRequest="45"
-                                                    HorizontalOptions="Start"
-                                                    VerticalOptions="Start"
-                                                    WidthRequest="45">
-                                                    <ffimageloading:CachedImage
-                                                        Aspect="AspectFill"
-                                                        HeightRequest="40"
-                                                        Source="{Binding SenderUserImage, Converter={StaticResource ImageUrlConverter}}"
-                                                        WidthRequest="40">
-                                                        <ffimageloading:CachedImage.Clip>
-                                                            <EllipseGeometry
-                                                                Center="20,20"
-                                                                RadiusX="20"
-                                                                RadiusY="20" />
-                                                        </ffimageloading:CachedImage.Clip>
-                                                    </ffimageloading:CachedImage>
-                                                </Frame>
-                                                <Frame
-                                                    Margin="0,0,-15,0"
-                                                    Padding="5"
-                                                    BackgroundColor="{StaticResource PrimaryDark}"
-                                                    BorderColor="{StaticResource PrimaryDark}"
-                                                    CornerRadius="100"
-                                                    HasShadow="False"
-                                                    HeightRequest="45"
-                                                    HorizontalOptions="Start"
-                                                    IsVisible="{Binding NotSameImage}"
-                                                    VerticalOptions="Start"
-                                                    WidthRequest="45">
-                                                    <ffimageloading:CachedImage
-                                                        Aspect="AspectFill"
-                                                        HeightRequest="40"
-                                                        Source="{Binding EmployUserImage, Converter={StaticResource ImageUrlConverter}}"
-                                                        WidthRequest="40">
-                                                        <ffimageloading:CachedImage.Clip>
-                                                            <EllipseGeometry
-                                                                Center="20,20"
-                                                                RadiusX="20"
-                                                                RadiusY="20" />
-                                                        </ffimageloading:CachedImage.Clip>
-                                                    </ffimageloading:CachedImage>
-                                                </Frame>
-                                            </HorizontalStackLayout>
-                                            <HorizontalStackLayout Grid.Column="1" HorizontalOptions="End">
-                                                <Frame
-                                                    Margin="0,0,10,0"
-                                                    Padding="7"
-                                                    BackgroundColor="White"
-                                                    BorderColor="Transparent"
-                                                    CornerRadius="10"
-                                                    HasShadow="False"
-                                                    VerticalOptions="Center">
-                                                    <Label
-                                                        FontFamily="FARegular"
-                                                        FontSize="22"
-                                                        Text=""
-                                                        TextColor="{StaticResource PrimaryDark}" />
-                                                </Frame>
-                                                <Label
-                                                    FontSize="16"
-                                                    Text="{Binding MessageCount}"
-                                                    TextColor="{StaticResource PrimaryDarkText}"
-                                                    VerticalOptions="Center" />
-                                            </HorizontalStackLayout>
-                                        </Grid>
-                                    </Grid>
-                                </Frame>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>-->
                 </VerticalStackLayout>
             </ScrollView>
             <ImageButton

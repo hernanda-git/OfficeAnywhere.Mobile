@@ -54,14 +54,15 @@
             </Grid>
 
             <ScrollView Grid.Row="1">
-                <VerticalStackLayout>
-                    <Grid
-                        Padding="20"
-                        ColumnDefinitions="9*,1*"
-                        ColumnSpacing="10"
-                        RowDefinitions="Auto">
+                <VerticalStackLayout
+                    x:Name="FormLayout"
+                    Padding="20"
+                    BindableLayout.ItemsSource="{Binding DynamicContents}"
+                    VerticalOptions="Fill">
+                    <!--<Grid>
                         <Frame
                             Grid.Row="0"
+                            Grid.RowSpan="2"
                             Grid.Column="1"
                             Margin="0"
                             Padding="5"
@@ -86,207 +87,49 @@
                                 </ffimageloading:CachedImage.Clip>
                             </ffimageloading:CachedImage>
                         </Frame>
+                        <Grid
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            ColumnDefinitions="*,*"
+                            HorizontalOptions="Fill"
+                            RowDefinitions="Auto">
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                Padding="5,0,0,0"
+                                FontAttributes="Bold"
+                                HorizontalOptions="End"
+                                HorizontalTextAlignment="End"
+                                Text="Ayman" />
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                Padding="0,0,5,0"
+                                FontAttributes="Bold"
+                                HorizontalOptions="Start"
+                                HorizontalTextAlignment="Start"
+                                Text="10 May 2025" />
+                        </Grid>
                         <Border
+                            Grid.Row="1"
+                            Grid.Column="0"
                             Padding="10"
                             Stroke="{StaticResource PrimaryDark}"
                             StrokeShape="RoundRectangle 10,10,10,10">
                             <Label FontAttributes="Bold" Text="Test Comment" />
                         </Border>
                     </Grid>
-                    <VerticalStackLayout
-                        x:Name="FormLayout"
+                    <Grid
+                        ColumnDefinitions="9*,1*"
+                        ColumnSpacing="5"
                         FlowDirection="RightToLeft"
                         HorizontalOptions="Fill"
-                        VerticalOptions="Fill" />
+                        RowDefinitions="Auto,Auto"
+                        RowSpacing="2" />-->
                 </VerticalStackLayout>
-
             </ScrollView>
-            <!--  Content  -->
-            <!--<ScrollView Grid.Row="1">
-                <VerticalStackLayout Padding="15,10,15,15">
-                    Task Title and Type
-                    <Frame
-                        Margin="0,0,0,20"
-                        BackgroundColor="{StaticResource TaskBackground}"
-                        BorderColor="Transparent"
-                        HasShadow="False">
-                        <Grid Padding="10" RowDefinitions="*,*">
-                            <Label
-                                Grid.Row="0"
-                                FontAttributes="Bold"
-                                FontSize="24"
-                                HorizontalTextAlignment="End"
-                                Text="{Binding SelectedTask.Title}"
-                                TextColor="{StaticResource PrimaryDark}" />
-                            <Label
-                                Grid.Row="1"
-                                FontSize="18"
-                                HorizontalTextAlignment="End"
-                                Text="{Binding SelectedTask.TaskTypeName}"
-                                TextColor="{StaticResource PrimaryDark}" />
-                        </Grid>
-                    </Frame>
-                    Date and Time
-                    <Frame
-                        Margin="0,0,0,20"
-                        BackgroundColor="{StaticResource TaskBackground}"
-                        BorderColor="Transparent"
-                        HasShadow="False">
-                        <Grid
-                            Padding="10"
-                            ColumnDefinitions="*,*"
-                            RowDefinitions="*,*">
-                            <Label
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                FontSize="16"
-                                Text="تاريخ التحديث"
-                                TextColor="{StaticResource PrimaryDarkText}" />
-                            <Label
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                FontSize="16"
-                                HorizontalTextAlignment="End"
-                                Text="{Binding SelectedTask.LastUpdatedDate, StringFormat='{0:MMMM dd, yyyy}'}"
-                                TextColor="{StaticResource PrimaryDark}" />
-                            <Label
-                                Grid.Row="1"
-                                Grid.Column="0"
-                                FontSize="16"
-                                Text="الوقت"
-                                TextColor="{StaticResource PrimaryDarkText}" />
-                            <Label
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                FontSize="16"
-                                HorizontalTextAlignment="End"
-                                Text="{Binding SelectedTask.LastUpdatedDate, StringFormat='{0:HH:mm}'}"
-                                TextColor="{StaticResource PrimaryDark}" />
-                        </Grid>
-                    </Frame>
-                    Sender and Employee
-                    <Frame
-                        Margin="0,0,0,20"
-                        BackgroundColor="{StaticResource TaskBackground}"
-                        BorderColor="Transparent"
-                        HasShadow="False">
-                        <Grid Padding="10" RowDefinitions="*,*">
-                            <HorizontalStackLayout Grid.Row="0" HorizontalOptions="Start">
-                                <Label
-                                    FontSize="16"
-                                    Text="المرسل"
-                                    TextColor="{StaticResource PrimaryDarkText}"
-                                    VerticalOptions="Center" />
-                                <Frame
-                                    Margin="10,0,0,0"
-                                    Padding="5"
-                                    BackgroundColor="{StaticResource PrimaryDark}"
-                                    BorderColor="{StaticResource PrimaryDark}"
-                                    CornerRadius="100"
-                                    HasShadow="False"
-                                    HeightRequest="45"
-                                    WidthRequest="45">
-                                    <ffimageloading:CachedImage
-                                        Aspect="AspectFill"
-                                        HeightRequest="40"
-                                        Source="{Binding SelectedTask.SenderUserImage, Converter={StaticResource ImageUrlConverter}}"
-                                        WidthRequest="40">
-                                        <ffimageloading:CachedImage.Clip>
-                                            <EllipseGeometry
-                                                Center="20,20"
-                                                RadiusX="20"
-                                                RadiusY="20" />
-                                        </ffimageloading:CachedImage.Clip>
-                                    </ffimageloading:CachedImage>
-                                </Frame>
-                            </HorizontalStackLayout>
-                            <HorizontalStackLayout
-                                Grid.Row="1"
-                                HorizontalOptions="Start"
-                                IsVisible="{Binding SelectedTask.NotSameImage}">
-                                <Label
-                                    FontSize="16"
-                                    Text="الموظف"
-                                    TextColor="{StaticResource PrimaryDarkText}"
-                                    VerticalOptions="Center" />
-                                <Frame
-                                    Margin="10,0,0,0"
-                                    Padding="5"
-                                    BackgroundColor="{StaticResource PrimaryDark}"
-                                    BorderColor="{StaticResource PrimaryDark}"
-                                    CornerRadius="100"
-                                    HasShadow="False"
-                                    HeightRequest="45"
-                                    WidthRequest="45">
-                                    <ffimageloading:CachedImage
-                                        Aspect="AspectFill"
-                                        HeightRequest="40"
-                                        Source="{Binding SelectedTask.EmployUserImage, Converter={StaticResource ImageUrlConverter}}"
-                                        WidthRequest="40">
-                                        <ffimageloading:CachedImage.Clip>
-                                            <EllipseGeometry
-                                                Center="20,20"
-                                                RadiusX="20"
-                                                RadiusY="20" />
-                                        </ffimageloading:CachedImage.Clip>
-                                    </ffimageloading:CachedImage>
-                                </Frame>
-                            </HorizontalStackLayout>
-                        </Grid>
-                    </Frame>
-                    Message Count
-                    <Frame
-                        Margin="0,0,0,20"
-                        BackgroundColor="{StaticResource TaskBackground}"
-                        BorderColor="Transparent"
-                        HasShadow="False">
-                        <HorizontalStackLayout Padding="10" HorizontalOptions="End">
-                            <Label
-                                FontSize="16"
-                                Text="عدد الرسائل"
-                                TextColor="{StaticResource PrimaryDarkText}"
-                                VerticalOptions="Center" />
-                            <Frame
-                                Margin="10,0,0,0"
-                                Padding="7"
-                                BackgroundColor="White"
-                                BorderColor="Transparent"
-                                CornerRadius="10"
-                                HasShadow="False"
-                                VerticalOptions="Center">
-                                <Label
-                                    FontFamily="FARegular"
-                                    FontSize="22"
-                                    Text=""
-                                    TextColor="{StaticResource PrimaryDark}" />
-                            </Frame>
-                            <Label
-                                FontSize="16"
-                                Text="{Binding SelectedTask.MessageCount}"
-                                TextColor="{StaticResource PrimaryDark}"
-                                VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                    </Frame>
-                    Description
-                    <Frame
-                        Margin="0,0,0,20"
-                        BackgroundColor="{StaticResource TaskBackground}"
-                        BorderColor="Transparent"
-                        HasShadow="False">
-                        <VerticalStackLayout Padding="10">
-                            <Label
-                                FontSize="16"
-                                Text="الوصف"
-                                TextColor="{StaticResource PrimaryDarkText}" />
-                            <Label
-                                FontSize="16"
-                                LineBreakMode="WordWrap"
-                                Text="{Binding SelectedTask.Description}"
-                                TextColor="{StaticResource PrimaryDark}" />
-                        </VerticalStackLayout>
-                    </Frame>
-                </VerticalStackLayout>
-            </ScrollView>-->
         </Grid>
     </ContentPage.Content>
 </ContentPage>

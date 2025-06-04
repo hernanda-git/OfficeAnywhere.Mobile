@@ -4,7 +4,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OfficeAnywhere.Mobile.Models;
 using OfficeAnywhere.Mobile.Services;
-using OfficeAnywhere.Mobile.Views;
 using System.Collections.ObjectModel;
 using System.Text.Json;
 using System.Windows.Input;
@@ -28,6 +27,7 @@ public partial class TaskViewModel : ObservableObject
     private ObservableCollection<TaskCard> taskCardList = new();
 
     private TaskCard? selectedTask;
+
     public TaskCard? SelectedTask
     {
         get => selectedTask;
@@ -96,53 +96,56 @@ public partial class TaskViewModel : ObservableObject
         try
         {
             IsBusy = true;
+
             var taskData = await _taskService.FetchTaskData();
-            //var taskData = await _taskService.FetchTaskDataString();
 
             if (taskData?.DelmonTasks != null)
             {
-                // Map DelmonTask to TaskCard
-                var taskCards = taskData.DelmonTasks.Select(task => new TaskCard
-                {
-                    Title = task.Title,
-                    TaskTypeName = task.TaskTypeName,
-                    AddedDate = task.AddedDate,
-                    LastUpdatedDate = task.LastUpdatedDate,
-                    SenderUserImage = task.SenderUserImage,
-                    EmployUserImage = task.EmployUserImage,
-                    NotSameImage = task.SenderUserImage != task.EmployUserImage,
-                    MessageCount = task.MessageCount,
-                    DelmonTask = JsonSerializer.Serialize(task)
-                }).ToList();
+                var taskCards = await Task.Run(() =>
+                    taskData.DelmonTasks.Select(task => new TaskCard
+                    {
+                        Title = task.Title,
+                        TaskTypeName = task.TaskTypeName,
+                        AddedDate = task.AddedDate,
+                        LastUpdatedDate = task.LastUpdatedDate,
+                        SenderUserImage = task.SenderUserImage,
+                        EmployUserImage = task.EmployUserImage,
+                        NotSameImage = task.SenderUserImage != task.EmployUserImage,
+                        MessageCount = task.MessageCount,
+                        DelmonTask = JsonSerializer.Serialize(task)
+                    }).ToList()
+                );
 
-                // Update ObservableCollection
-                TaskCardList.Clear();
-                foreach (var taskCard in taskCards)
+                MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    TaskCardList.Add(taskCard);
-                }
+                    TaskCardList = new ObservableCollection<TaskCard>(taskCards);
+                });
             }
         }
         catch (Exception ex)
         {
-            await Snackbar.Make(
-                $"Error fetching task data: {ex.Message}",
-                duration: TimeSpan.FromSeconds(5),
-                visualOptions: new SnackbarOptions
-                {
-                    BackgroundColor = Colors.DarkRed,
-                    TextColor = Colors.White,
-                    ActionButtonTextColor = Colors.White,
-                    CornerRadius = 8,
-                    Font = Microsoft.Maui.Font.Default
-                }
-            ).Show();
+            await MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                await Snackbar.Make(
+                    $"Error fetching task data: {ex.Message}",
+                    duration: TimeSpan.FromSeconds(5),
+                    visualOptions: new SnackbarOptions
+                    {
+                        BackgroundColor = Colors.DarkRed,
+                        TextColor = Colors.White,
+                        ActionButtonTextColor = Colors.White,
+                        CornerRadius = 8,
+                        Font = Microsoft.Maui.Font.Default
+                    }
+                ).Show();
+            });
         }
         finally
         {
             IsBusy = false;
         }
     }
+
 
     [RelayCommand]
     public async Task TaskSelectedAsync(TaskCard? selectedTask)
@@ -156,7 +159,6 @@ public partial class TaskViewModel : ObservableObject
 
         IsBusy = false;
     }
-
 
     private async Task AddTask()
     {
