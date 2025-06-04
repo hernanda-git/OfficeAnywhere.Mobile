@@ -16,10 +16,16 @@
         <toolkit:StatusBarBehavior StatusBarColor="{StaticResource PrimaryDark}" StatusBarStyle="Default" />
     </ContentPage.Behaviors>
     <ContentPage.Resources>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
         <converters:ImageUrlConverter x:Key="ImageUrlConverter" />
+        <ResourceDictionary>
+            <DataTemplate x:Key="SkeletonView">
+                <local:SkeletonView />
+            </DataTemplate>
+        </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <Grid ColumnDefinitions="*" RowDefinitions="Auto,*">
+        <Grid ColumnDefinitions="*" RowDefinitions="Auto,*,Auto,Auto,Auto,Auto">
             <!--  Header  -->
             <Grid
                 Grid.Row="0"
@@ -31,7 +37,7 @@
                 VerticalOptions="Start">
                 <ImageButton
                     Grid.Column="0"
-                    Command="{Binding BackCommand}"
+                    Command="{Binding BackButtonCommand}"
                     VerticalOptions="Center">
                     <ImageButton.Source>
                         <FontImageSource
@@ -53,11 +59,18 @@
                     VerticalOptions="Center" />
             </Grid>
 
+            <local:SkeletonView Grid.Row="1" IsVisible="{Binding IsBusy}" />
+            <local:SkeletonView Grid.Row="2" IsVisible="{Binding IsBusy}" />
+            <local:SkeletonView Grid.Row="3" IsVisible="{Binding IsBusy}" />
+            <local:SkeletonView Grid.Row="4" IsVisible="{Binding IsBusy}" />
+            <local:SkeletonView Grid.Row="5" IsVisible="{Binding IsBusy}" />
+
             <ScrollView Grid.Row="1">
                 <VerticalStackLayout
                     x:Name="FormLayout"
                     Padding="20"
                     BindableLayout.ItemsSource="{Binding DynamicContents}"
+                    IsVisible="{Binding IsBusy, Converter={converters:InverseBooleanConverter}}"
                     VerticalOptions="Fill" />
             </ScrollView>
         </Grid>

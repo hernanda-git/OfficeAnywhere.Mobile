@@ -126,6 +126,7 @@
 
                     <CollectionView
                         Margin="0"
+                        IsVisible="{Binding IsBusy, Converter={converters:InverseBooleanConverter}}"
                         ItemsSource="{Binding TaskCardList}"
                         SelectedItem="{Binding SelectedTask, Mode=TwoWay}"
                         SelectionChangedCommand="{Binding TaskSelectedCommand}"

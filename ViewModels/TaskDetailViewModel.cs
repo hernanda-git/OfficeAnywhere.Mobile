@@ -15,6 +15,7 @@ namespace OfficeAnywhere.Mobile.ViewModels;
 
 public partial class TaskDetailViewModel : ObservableObject
 {
+    private readonly TaskService _taskService;
     private readonly DelmonTaskCacheService _delmonTaskCacheService;
     public string? DelmonTask { get; private set; }
 
@@ -29,39 +30,42 @@ public partial class TaskDetailViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<View> dynamicContents = new();
 
-    public TaskDetailViewModel(DelmonTaskCacheService delmonTaskCacheService)
+    public TaskDetailViewModel(DelmonTaskCacheService delmonTaskCacheService, TaskService taskService)
     {
         _delmonTaskCacheService = delmonTaskCacheService;
+        _taskService = taskService;
+    }
+
+    public async Task InitializeAsync()
+    {
+        if (IsBusy) return;
+        IsBusy = true;
 
         DelmonTask = _delmonTaskCacheService.GetCachedTask();
 
         if (DelmonTask is not null)
         {
-            _ = InitializeAsync(DelmonTask); // fire-and-forget
+            await Task.Run(() =>
+            {
+                using var document = JsonDocument.Parse(DelmonTask);
+                JsonElement root = document.RootElement;
+
+                var views = GenerateDetailViews(root);
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    DynamicContents.Clear();
+                    foreach (var view in views)
+                        DynamicContents.Add(view);
+
+                    ViewsReady?.Invoke();
+                });
+            });
         }
         else
         {
             _ = ToListTask();
         }
-    }
-
-    private async Task InitializeAsync(string taskJson)
-    {
-        await Task.Run(() =>
-        {
-            using var document = JsonDocument.Parse(taskJson);
-            JsonElement root = document.RootElement;
-
-            var views = GenerateDetailViews(root);
-            MainThread.BeginInvokeOnMainThread(() =>
-            {
-                DynamicContents.Clear();
-                foreach (var view in views)
-                    DynamicContents.Add(view);
-
-                ViewsReady?.Invoke();
-            });
-        });
+        IsBusy = false;
     }
 
     private async Task ToListTask()
@@ -79,16 +83,28 @@ public partial class TaskDetailViewModel : ObservableObject
         IsBusy = false;
     }
 
+    [RelayCommand]
+    public async Task BackButtonAsync()
+    {
+        await Shell.Current.GoToAsync("//TaskPage", true);
+    }
+
     private IEnumerable<View> GenerateDetailViews(JsonElement json)
     {
         var views = new List<View>();
+
+        string? title = json.TryGetProperty("Title", out JsonElement titleElement) ? titleElement.GetString() : string.Empty;
+        if (!string.IsNullOrEmpty(title))
+        {
+            Title = title;
+        }
 
         string? senderUserImage = json.TryGetProperty("SenderUserImage", out JsonElement senderUserImageElement) ? senderUserImageElement.GetString() : string.Empty;
         string? senderName = json.TryGetProperty("SenderName", out JsonElement senderNameElement) ? senderNameElement.GetString() : string.Empty;
         string? addedDateRaw = json.TryGetProperty("AddedDate", out JsonElement addedDateElement) ? addedDateElement.GetString() : string.Empty;
 
         string formattedDate = DateTime.TryParse(addedDateRaw, out var parsedDate)
-            ? parsedDate.ToString("dd MMM yyyy")
+            ? parsedDate.ToString("dd MMM yyyy HH:mm:ss")
             : string.Empty;
 
         var profileFrame = CreateProfileImage(senderUserImage);
@@ -127,6 +143,9 @@ public partial class TaskDetailViewModel : ObservableObject
         containerGrid.Children.Add(taskStateView);
 
         views.Add(containerGrid);
+
+        // generate child-task
+
         return views;
     }
     private Border CreateTaskDetailCard(JsonElement json)
@@ -167,7 +186,9 @@ public partial class TaskDetailViewModel : ObservableObject
 
             if (!string.IsNullOrEmpty(taskTypeName))
             {
-                var label = GenerateLabel(taskTypeName, FontSizeOption.Description, TextAlignment.End);
+                var label = GenerateLabel(taskTypeName, FontSizeOption.Medium, TextAlignment.End);
+                label.VerticalOptions = LayoutOptions.Center;
+
                 Grid.SetRow(label, 0);
                 Grid.SetColumn(label, 1);
                 grid.Children.Add(label);
@@ -175,7 +196,7 @@ public partial class TaskDetailViewModel : ObservableObject
 
             if (!string.IsNullOrEmpty(details))
             {
-                var desc = GenerateLabel(details, FontSizeOption.Medium, TextAlignment.Start);
+                var desc = GenerateLabel(details, FontSizeOption.Description, TextAlignment.Start);
                 Grid.SetRow(desc, 1);
                 Grid.SetColumn(desc, 0);
                 Grid.SetColumnSpan(desc, 2);
@@ -291,9 +312,9 @@ public partial class TaskDetailViewModel : ObservableObject
                     TextColor = Colors.Blue,
                     FontSize = size,
                     FontAttributes = FontAttributes.Bold,
-                    VerticalOptions = LayoutOptions.Fill,
-                    HorizontalOptions = LayoutOptions.Fill,
                     HorizontalTextAlignment = align,
+                    VerticalTextAlignment = TextAlignment.Center,
+                    VerticalOptions = LayoutOptions.Center,
                     Margin = margin ?? new Thickness(0, 0, 0, 5),
                     StyleId = !string.IsNullOrEmpty(id) ? $"{id}_link_{i}" : null
                 };
@@ -311,11 +332,11 @@ public partial class TaskDetailViewModel : ObservableObject
                 {
                     Text = line,
                     FontAttributes = FontAttributes.Bold,
-                    VerticalOptions = LayoutOptions.Fill,
-                    HorizontalOptions = LayoutOptions.Fill,
                     FontSize = size,
                     TextColor = color,
                     HorizontalTextAlignment = align,
+                    VerticalOptions = LayoutOptions.Center,
+                    VerticalTextAlignment = TextAlignment.Center,
                     Margin = margin ?? new Thickness(0, 0, 0, 5),
                     StyleId = !string.IsNullOrEmpty(id) ? $"{id}_{i}" : null
                 });

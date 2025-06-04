@@ -25,5 +25,6 @@ public partial class TaskDetailPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        viewModel.InitializeAsync();
     }
 }

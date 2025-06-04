@@ -148,4 +148,35 @@ public class TaskService
 
         return res;
     }
+
+    public async Task<string?> FetchDelmonForm(string id)
+    {
+        string res = string.Empty;
+        string tenant = await SecureStorage.GetAsync("Tenant") ?? "";
+        string accessToken = await SecureStorage.GetAsync("AccessToken") ?? "";
+
+        var clientHandler = new HttpClientHandler
+        {
+            UseCookies = false,
+        };
+        var client = new HttpClient(clientHandler);
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri($"https://o-anywhere.com/home/DelmonForms?id={id}&tenant={tenant}&live=1"),
+            Headers =
+            {
+                { "tenant", tenant },
+                { "Authorization", $"Bearer {accessToken}" },
+            },
+        };
+        using (var response = await client.SendAsync(request))
+        {
+            response.EnsureSuccessStatusCode();
+            var body = await response.Content.ReadAsStringAsync();
+            res = body;
+        }
+
+        return res;
+    }
 }

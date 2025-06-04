@@ -21,7 +21,7 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
 		<!-- Display name -->
-		<ApplicationTitle>O-Anywhere</ApplicationTitle>
+		<ApplicationTitle>Office Anywhere</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.delmon.officeanywhere.mobile</ApplicationId>
@@ -39,10 +39,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<MauiImage Include="Resources\Images\*" Exclude="Resources\Images\app_icon.png" />
+		<MauiImage Include="Resources\Images\*" />
 
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\Images\app_icon.png" />
+		<MauiIcon Include="Resources\AppIcon\ic_launcher.png" BaseSize="128,128" />
 
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\Images\logo_light.png" Color="#005F7F" BaseSize="558,222" />
@@ -58,7 +58,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="ViewModels\TaskViewModel.cs~RF187228d.TMP" />
+		<None Remove="Resources\AppIcon\ic_launcher_foreground.png" />
+		<None Remove="Resources\AppIcon\ic_launcher_round.png" />
+		<None Remove="ViewModels\TaskViewModel.cs~RF187228d.TMP" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -73,51 +75,51 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Views\ExperimentPage.xaml.cs">
-	    <DependentUpon>ExperimentPage.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="Views\SkeletonView.xaml.cs">
-	    <DependentUpon>SkeletonView.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="Views\ProfilePage.xaml.cs">
-	    <DependentUpon>ProfilePage.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="Views\FormTemplate.xaml.cs">
-	    <DependentUpon>FormTemplate.xaml</DependentUpon>
-	  </Compile>
+		<Compile Update="Views\ExperimentPage.xaml.cs">
+			<DependentUpon>ExperimentPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\SkeletonView.xaml.cs">
+			<DependentUpon>SkeletonView.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\ProfilePage.xaml.cs">
+			<DependentUpon>ProfilePage.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\FormTemplate.xaml.cs">
+			<DependentUpon>FormTemplate.xaml</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Views\DocumentPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\Login.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\ExperimentPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\SkeletonView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\ProfilePage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\SchedulePage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\FormTemplate.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\SkeletonLoaderView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\TaskDetailPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\TaskPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
+		<MauiXaml Update="Views\DocumentPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Login.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\ExperimentPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\SkeletonView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\ProfilePage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\SchedulePage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\FormTemplate.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\SkeletonLoaderView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\TaskDetailPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\TaskPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 	</ItemGroup>
 
 </Project>
