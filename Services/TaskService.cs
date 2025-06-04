@@ -61,33 +61,35 @@ public class TaskService
         }
     }
 
-    public async Task<TaskData?> FetchTaskData()
+    public async Task<TaskData?> FetchTaskData(CancellationToken cancellationToken = default)
     {
         TaskData res = new TaskData();
 
-        string userId = await SecureStorage.GetAsync("UserId") ?? "0";
-        string tenant = await SecureStorage.GetAsync("Tenant") ?? "";
-        string accessToken = await SecureStorage.GetAsync("AccessToken") ?? "";
+        try
+        {
+            string userId = await SecureStorage.GetAsync("UserId") ?? "0";
+            string tenant = await SecureStorage.GetAsync("Tenant") ?? "";
+            string accessToken = await SecureStorage.GetAsync("AccessToken") ?? "";
 
-        var clientHandler = new HttpClientHandler
-        {
-            UseCookies = false,
-        };
-        var client = new HttpClient(clientHandler);
-        var request = new HttpRequestMessage
-        {
-            Method = HttpMethod.Get,
-            RequestUri = new Uri($"https://o-anywhere.com/api/Global/GetFolders?=&id={userId}&folder=1&state=0&skip=0&take=10&type=0&planid=0&Project=&Customer=&keySearch="),
-            Headers =
+            using var clientHandler = new HttpClientHandler
+            {
+                UseCookies = false,
+            };
+            using var client = new HttpClient(clientHandler);
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"https://o-anywhere.com/api/Global/GetFolders?=&id={userId}&folder=1&state=0&skip=0&take=10&type=0&planid=0&Project=&Customer=&keySearch="),
+                Headers =
             {
                 { "tenant", tenant },
                 { "Authorization", $"Bearer {accessToken}" },
             },
-        };
-        using (var response = await client.SendAsync(request))
-        {
+            };
+
+            using var response = await client.SendAsync(request, cancellationToken);
             response.EnsureSuccessStatusCode();
-            var body = await response.Content.ReadAsStringAsync();
+            var body = await response.Content.ReadAsStringAsync(cancellationToken);
 
             var data = JsonSerializer.Deserialize<TaskData>(body, new JsonSerializerOptions
             {
@@ -99,8 +101,20 @@ public class TaskService
                 res = data;
             }
         }
+        catch (OperationCanceledException)
+        {
+            return null;
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new Exception("Network error occurred while fetching tasks.", ex);
+        }
+        catch (JsonException ex)
+        {
+            throw new Exception("Error parsing task data.", ex);
+        }
 
-        return res; 
+        return res;
     }
 
     public async Task<string?> FetchTaskDataString()

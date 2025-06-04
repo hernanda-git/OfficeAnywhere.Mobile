@@ -7,6 +7,7 @@ namespace OfficeAnywhere.Mobile.Views
     public partial class TaskPage : ContentPage
     {
         private readonly TaskViewModel viewModel;
+        private CancellationTokenSource? _cts = new CancellationTokenSource();
 
         public TaskPage(TaskViewModel viewModel)
         {
@@ -14,10 +15,20 @@ namespace OfficeAnywhere.Mobile.Views
             BindingContext = this.viewModel = viewModel;
         }
 
-        protected async override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
-            await viewModel.LoadTaskDataAsync();
+            _cts = new CancellationTokenSource();
+            await Task.Run(viewModel.GetMainUserAsync);
+            await viewModel.LoadTaskDataAsync(_cts.Token);
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            _cts?.Cancel();
+            _cts?.Dispose();
+            _cts = null;
         }
 
         protected override bool OnBackButtonPressed()
@@ -25,7 +36,4 @@ namespace OfficeAnywhere.Mobile.Views
             return true;
         }
     }
-
-   
-
 }

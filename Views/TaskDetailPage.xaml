@@ -58,77 +58,7 @@
                     x:Name="FormLayout"
                     Padding="20"
                     BindableLayout.ItemsSource="{Binding DynamicContents}"
-                    VerticalOptions="Fill">
-                    <!--<Grid>
-                        <Frame
-                            Grid.Row="0"
-                            Grid.RowSpan="2"
-                            Grid.Column="1"
-                            Margin="0"
-                            Padding="5"
-                            BackgroundColor="{StaticResource PrimaryDark}"
-                            BorderColor="{StaticResource PrimaryDark}"
-                            CornerRadius="100"
-                            HasShadow="False"
-                            HeightRequest="45"
-                            HorizontalOptions="Start"
-                            VerticalOptions="Start"
-                            WidthRequest="45">
-                            <ffimageloading:CachedImage
-                                Aspect="AspectFill"
-                                HeightRequest="40"
-                                Source="sample_profile_pic.jpg"
-                                WidthRequest="40">
-                                <ffimageloading:CachedImage.Clip>
-                                    <EllipseGeometry
-                                        Center="20,20"
-                                        RadiusX="20"
-                                        RadiusY="20" />
-                                </ffimageloading:CachedImage.Clip>
-                            </ffimageloading:CachedImage>
-                        </Frame>
-                        <Grid
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            ColumnDefinitions="*,*"
-                            HorizontalOptions="Fill"
-                            RowDefinitions="Auto">
-                            <Label
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                Grid.ColumnSpan="2"
-                                Padding="5,0,0,0"
-                                FontAttributes="Bold"
-                                HorizontalOptions="End"
-                                HorizontalTextAlignment="End"
-                                Text="Ayman" />
-                            <Label
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                Grid.ColumnSpan="2"
-                                Padding="0,0,5,0"
-                                FontAttributes="Bold"
-                                HorizontalOptions="Start"
-                                HorizontalTextAlignment="Start"
-                                Text="10 May 2025" />
-                        </Grid>
-                        <Border
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Padding="10"
-                            Stroke="{StaticResource PrimaryDark}"
-                            StrokeShape="RoundRectangle 10,10,10,10">
-                            <Label FontAttributes="Bold" Text="Test Comment" />
-                        </Border>
-                    </Grid>
-                    <Grid
-                        ColumnDefinitions="9*,1*"
-                        ColumnSpacing="5"
-                        FlowDirection="RightToLeft"
-                        HorizontalOptions="Fill"
-                        RowDefinitions="Auto,Auto"
-                        RowSpacing="2" />-->
-                </VerticalStackLayout>
+                    VerticalOptions="Fill" />
             </ScrollView>
         </Grid>
     </ContentPage.Content>

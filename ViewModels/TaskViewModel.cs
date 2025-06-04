@@ -41,21 +41,17 @@ public partial class TaskViewModel : ObservableObject
             }
         }
     }
-
     public TaskViewModel(TaskService taskService, DelmonTaskCacheService delmonTaskCacheService)
     {
         _taskService = taskService;
         _delmonTaskCacheService = delmonTaskCacheService;
         AddTaskCommand = new Command(async () => await AddTask());
-        InitializeAsync();
     }
 
-    private async void InitializeAsync()
+    public async Task InitializeAsync()
     {
         await GetMainUserAsync();
-        await LoadTaskDataAsync();
     }
-
     [RelayCommand]
     public async Task GetMainUserAsync()
     {
@@ -89,15 +85,14 @@ public partial class TaskViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public async Task LoadTaskDataAsync()
+    public async Task LoadTaskDataAsync(CancellationToken cancellationToken)
     {
         if (IsBusy) return;
 
         try
         {
             IsBusy = true;
-
-            var taskData = await _taskService.FetchTaskData();
+            var taskData = await _taskService.FetchTaskData(cancellationToken);
 
             if (taskData?.DelmonTasks != null)
             {
@@ -113,14 +108,35 @@ public partial class TaskViewModel : ObservableObject
                         NotSameImage = task.SenderUserImage != task.EmployUserImage,
                         MessageCount = task.MessageCount,
                         DelmonTask = JsonSerializer.Serialize(task)
-                    }).ToList()
-                );
+                    }).ToList(), cancellationToken);
 
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    TaskCardList = new ObservableCollection<TaskCard>(taskCards);
+                    TaskCardList.Clear();
+                    foreach (var taskCard in taskCards)
+                    {
+                        TaskCardList.Add(taskCard);
+                    }
                 });
             }
+        }
+        catch (OperationCanceledException)
+        {
+            await MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                await Snackbar.Make(
+                    "Task loading was cancelled.",
+                    duration: TimeSpan.FromSeconds(3),
+                    visualOptions: new SnackbarOptions
+                    {
+                        BackgroundColor = Colors.Orange,
+                        TextColor = Colors.White,
+                        ActionButtonTextColor = Colors.White,
+                        CornerRadius = 8,
+                        Font = Microsoft.Maui.Font.Default
+                    }
+                ).Show();
+            });
         }
         catch (Exception ex)
         {
